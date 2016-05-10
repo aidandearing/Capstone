@@ -12,6 +12,8 @@ namespace Capstone
         GraphicsDeviceManager graphics;
         SpriteBatch spriteBatch;
 
+        Camera camera = Camera.Instance;
+
         public GameMain()
         {
             graphics = new GraphicsDeviceManager(this);

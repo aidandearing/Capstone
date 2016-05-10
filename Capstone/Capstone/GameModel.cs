@@ -21,7 +21,7 @@ namespace Capstone
             // It needs the transform matrix DONE
             // It needs the camera view matrix
             // It needs the projection matrix
-            model.Draw(transform, Camera.Instance.view, Camera.Instance.projection);
+            model.Draw(transform.Transformation, Camera.Instance.view, Camera.Instance.projection);
         }
 
         public static GameModel MakeGameModel(string name)
@@ -30,7 +30,7 @@ namespace Capstone
             if (!models.ContainsKey(name))
             {
                 // Needs to try to get the model at that name in the models path & load it
-                Model model = ContentHelper.Content.Load<Model>("THEPATH" + name);
+                Model model = ContentHelper.Content.Load<Model>("Assets/Models/" + name);
                 // add the model into the dictionary
                 models.Add(name, model);
             }

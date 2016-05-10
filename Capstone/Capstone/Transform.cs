@@ -6,6 +6,18 @@ namespace Capstone
     {
         private Matrix transformation;
 
+        public Matrix Transformation
+        {
+            get
+            {
+                return transformation;
+            }
+            set
+            {
+                transformation = value;
+            }
+        }
+
         public Vector3 Position
         {
             get

@@ -1,10 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Microsoft.Xna.Framework;
+﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
+using Microsoft.Xna.Framework.Input;
+using System.Collections.Generic;
 
 namespace Capstone
 {
@@ -19,17 +16,24 @@ namespace Capstone
             this.model = model;
         }
 
-        public void Draw()
+        public void Draw(Transform transform)
         {
-            
+            // It needs the transform matrix DONE
+            // It needs the camera view matrix
+            // It needs the projection matrix
+            model.Draw(transform, Camera.Instance.view, Camera.Instance.projection);
         }
 
-        public static GameModel GetModel(string name)
+        public static GameModel MakeGameModel(string name)
         {
             // If the model isn't already loaded (it's key isn't found in the dictionary)
-                // Needs to try to get the model at that name in the models path
-                // If it fails return a null
-                // If it succeeds load the model into the dictionary
+            if (!models.ContainsKey(name))
+            {
+                // Needs to try to get the model at that name in the models path & load it
+                Model model = ContentHelper.Content.Load<Model>("THEPATH" + name);
+                // add the model into the dictionary
+                models.Add(name, model);
+            }
             // Pass the model at that key in the dictionary
             return new GameModel(models[name]);
         }

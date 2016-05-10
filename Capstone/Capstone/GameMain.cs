@@ -16,6 +16,7 @@ namespace Capstone
         {
             graphics = new GraphicsDeviceManager(this);
             Content.RootDirectory = "Content";
+            ContentHelper.Content = Content;
         }
 
         /// <summary>

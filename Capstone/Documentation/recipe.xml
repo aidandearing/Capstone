@@ -1,0 +1,61 @@
+<recipe>
+	<name>Sandwich</name>
+	<description>Assemble slices of cheese onto sliced bread, with butter.</description>
+	<preparation>5</preparation>
+	<foods>
+		<food>
+			<modifier>Sliced</modifier>
+			<number>2</number>
+		</food>
+		<food>
+			<category>Bread</category>
+			<modifier>Sliced</modifier>
+			<number>2</number>
+		</food>
+		<food>
+			<category>Butter</category>
+			<number>10</number>
+		</food>
+		<optional>
+			<food>
+				<modifier>Sliced</modifier>
+				<number>2</number>
+			</food>
+				<modifier>Sliced</modifier>
+				<number>2</number>
+			<food>
+				<modifier>Sliced</modifier>
+				<number>2</number>
+			</food>
+			<food>
+				<modifier>Sliced</modifier>
+				<number>2</number>
+			</food>
+		</optional>
+	</foods>
+	<result>
+		<food>Cheese Sandwich</food>
+	</result>
+</recipe>
+
+<recipe>
+	<name>Cutting Up A Chicken</name>
+	<description>Take a raw chicken and cut it up into its parts.</description>
+	<preparation>60</preparation>
+	<foods>
+		<food>
+			<category>Raw Chicken</category>
+			<number>1</number>
+		</food>
+	</foods>
+	<result>
+		<food>Chicken Thigh</food>
+		<food>Chicken Thigh</food>
+		<food>Chicken Wing</food>
+		<food>Chicken Wing</food>
+		<food>Chicken Leg</food>
+		<food>Chicken Leg</food>
+		<food>Chicken Breast</food>
+		<food>Chicken Breast</food>
+	</result>
+</recipe>

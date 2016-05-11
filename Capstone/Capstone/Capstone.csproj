@@ -49,8 +49,12 @@
     <Compile Include="GameMain.cs" />
     <Compile Include="GameModel.cs" />
     <Compile Include="GameObject.cs" />
+<<<<<<< HEAD
     <Compile Include="GraphicsHelper.cs" />
     <Compile Include="PhysicsBody.cs" />
+=======
+    <Compile Include="GameObjectManager.cs" />
+>>>>>>> origin/master
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Shape.cs" />
@@ -79,9 +83,11 @@
     <Folder Include="Content\World\XML\" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="Content\Assets\Models\BasicDoor.FBX" />
     <None Include="Content\Assets\Models\BasicWall.FBX" />
     <None Include="Content\Assets\Models\BasicWallCorner.FBX" />
     <None Include="Content\Assets\Models\BasicWallCornerShort.FBX" />
+    <None Include="Content\Assets\Models\DoorFrame.FBX" />
     <None Include="Content\Assets\Models\FloorTile.FBX" />
     <None Include="Content\Assets\Models\FrontBasicWallCorner.FBX" />
     <None Include="Content\Assets\Models\FrontBasicWallCornerShort.FBX" />

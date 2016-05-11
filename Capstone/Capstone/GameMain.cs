@@ -1,6 +1,7 @@
 ﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
+using System;
 
 namespace Capstone
 {
@@ -12,14 +13,44 @@ namespace Capstone
         GraphicsDeviceManager graphics;
         SpriteBatch spriteBatch;
 
-        Camera camera = Camera.Instance;
+        Camera camera;
+
+        // Temporary
         GameObject obj;
 
         public GameMain()
         {
             graphics = new GraphicsDeviceManager(this);
+            GraphicsHelper.graphics = graphics;
             Content.RootDirectory = "Content";
             ContentHelper.Content = Content;
+
+            Window.AllowUserResizing = false;
+
+            // Borderless Window functionality
+            Window.IsBorderless = true;
+            Window.Position = Point.Zero;
+
+            Window.Title = "I am Poor and Hungry";
+
+            // Scaleable resolution functionality
+            graphics.PreferredBackBufferWidth = 960;
+            graphics.PreferredBackBufferHeight = 540;
+
+            GraphicsHelper.screen = new Rectangle(0, 0, graphics.PreferredBackBufferWidth, graphics.PreferredBackBufferHeight);
+
+            // Depth and Buffer format functionality
+            graphics.PreferredDepthStencilFormat = DepthFormat.Depth16;
+            graphics.PreferredBackBufferFormat = SurfaceFormat.Color;
+
+            // V-Sync
+            graphics.SynchronizeWithVerticalRetrace = true;
+
+            // Anti-Aliasing functionality
+            graphics.PreferMultiSampling = true;
+
+            // Fullscreen functionality
+            //graphics.ToggleFullScreen();
         }
 
         /// <summary>
@@ -31,6 +62,7 @@ namespace Capstone
         protected override void Initialize()
         {
             // TODO: Add your initialization logic here
+            camera = Camera.Instance;
 
             base.Initialize();
         }

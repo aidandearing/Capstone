@@ -24,7 +24,7 @@ namespace Capstone
             Vector3 lookAt = new Vector3(0, 0, 0);
             view = Matrix.CreateLookAt(position, lookAt, Vector3.Up);
 
-            projection = Matrix.CreateOrthographic(800, 600, -1000, 1000);
+            projection = Matrix.CreateOrthographic(GraphicsHelper.screen.Width, GraphicsHelper.screen.Height, -1000, 1000);
         }
 
         public Matrix view;

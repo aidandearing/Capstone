@@ -49,12 +49,9 @@
     <Compile Include="GameMain.cs" />
     <Compile Include="GameModel.cs" />
     <Compile Include="GameObject.cs" />
-<<<<<<< HEAD
     <Compile Include="GraphicsHelper.cs" />
     <Compile Include="PhysicsBody.cs" />
-=======
     <Compile Include="GameObjectManager.cs" />
->>>>>>> origin/master
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Shape.cs" />

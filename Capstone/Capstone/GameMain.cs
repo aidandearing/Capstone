@@ -112,7 +112,7 @@ namespace Capstone
         /// <param name="gameTime">Provides a snapshot of timing values.</param>
         protected override void Draw(GameTime gameTime)
         {
-            GraphicsDevice.Clear(Color.CornflowerBlue);
+            GraphicsDevice.Clear(Color.Aquamarine);
 
             // TODO: Add your drawing code here
             obj.Draw();

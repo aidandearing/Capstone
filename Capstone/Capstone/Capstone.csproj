@@ -64,13 +64,21 @@
     <MonoGameContentReference Include="Content\Content.mgcb" />
   </ItemGroup>
   <ItemGroup>
-    <Folder Include="Content\Assets\Models\" />
     <Folder Include="Content\Assets\Textures\" />
     <Folder Include="Content\Assets\XML\" />
     <Folder Include="Content\UI\Screens\" />
     <Folder Include="Content\UI\Widgets\" />
     <Folder Include="Content\World\Maps\" />
     <Folder Include="Content\World\XML\" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Content\Assets\Models\BasicWall.FBX" />
+    <None Include="Content\Assets\Models\BasicWallCorner.FBX" />
+    <None Include="Content\Assets\Models\BasicWallCornerShort.FBX" />
+    <None Include="Content\Assets\Models\FloorTile.FBX" />
+    <None Include="Content\Assets\Models\FrontBasicWallCorner.FBX" />
+    <None Include="Content\Assets\Models\FrontBasicWallCornerShort.FBX" />
+    <None Include="Content\Assets\Models\ShortWall.FBX" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Import Project="$(MSBuildExtensionsPath)\MonoGame\v3.0\MonoGame.Content.Builder.targets" />

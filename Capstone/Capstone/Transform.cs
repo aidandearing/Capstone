@@ -64,7 +64,7 @@ namespace Capstone
 
         public Transform()
         {
-            transformation = new Matrix();
+            transformation = Matrix.Identity;
             Forward = transformation.Forward;
             Left = transformation.Left;
         }

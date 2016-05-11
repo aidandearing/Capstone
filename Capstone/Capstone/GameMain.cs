@@ -13,6 +13,7 @@ namespace Capstone
         SpriteBatch spriteBatch;
 
         Camera camera = Camera.Instance;
+        GameObject obj;
 
         public GameMain()
         {
@@ -44,6 +45,9 @@ namespace Capstone
             spriteBatch = new SpriteBatch(GraphicsDevice);
 
             // TODO: use this.Content to load your game content here
+            obj = new GameObject();
+            obj.transform.Translate(new Vector3(0, 0, 0));
+            obj.model = GameModel.MakeGameModel("BasicWall");
         }
 
         /// <summary>
@@ -79,6 +83,7 @@ namespace Capstone
             GraphicsDevice.Clear(Color.CornflowerBlue);
 
             // TODO: Add your drawing code here
+            obj.Draw();
 
             base.Draw(gameTime);
         }

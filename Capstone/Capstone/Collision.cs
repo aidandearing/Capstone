@@ -24,7 +24,7 @@ namespace Capstone
         /// <summary>
         /// Evaluates whether the collision is occuring or not
         /// </summary>
-        /// <returns>NOT IMPLEMENTED YET</returns>
+        /// <returns>Whether a collision is occuring or not</returns>
         bool Evaluate()
         {
             bool test = BodyA.shape.Test(BodyB.shape);

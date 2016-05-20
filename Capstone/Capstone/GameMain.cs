@@ -77,7 +77,7 @@ namespace Capstone
             spriteBatch = new SpriteBatch(GraphicsDevice);
 
             // TODO: use this.Content to load your game content here
-            obj = new GameObject();
+            obj = new GameObject("wall");
             obj.transform.Translate(new Vector3(0, 0, 0));
             obj.model = GameModel.MakeGameModel("BasicWall");
         }

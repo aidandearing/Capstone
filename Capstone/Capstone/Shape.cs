@@ -6,15 +6,19 @@ namespace Capstone
     class Shape
     {
         public const int VERTICELIMIT = 16;
+
+        public Transform transform;
         protected Vector3[] points = new Vector3[VERTICELIMIT];
 
-        public Shape()
+        public Shape(Transform transform)
         {
-            
+            this.transform = transform;
         }
 
-        public Shape(Vector3[] points)
+        public Shape(Transform transform, Vector3[] points)
         {
+            this.transform = transform;
+
             if (points.Length <= VERTICELIMIT)
             {
                 this.points = points;
@@ -32,6 +36,18 @@ namespace Capstone
         {
             // SAT
             return null;
+        }
+
+        public virtual bool Test(Shape shape)
+        {
+            // SAT
+            return true;
+        }
+
+        public virtual bool Intersects(Vector3 point)
+        {
+            // ???
+            return true;
         }
     }
 }

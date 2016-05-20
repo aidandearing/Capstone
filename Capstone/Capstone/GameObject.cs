@@ -11,9 +11,12 @@ namespace Capstone
         public GameModel model;
         public Transform transform;
 
-        public GameObject()
+        public string Name { get; set; }
+
+        public GameObject(string name)
         {
             transform = new Transform();
+            Name = name;
         }
 
         public void Update()

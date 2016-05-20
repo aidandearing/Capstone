@@ -8,8 +8,9 @@ namespace Capstone
 {
     class GameObjectManager
     {
-        List<GameObject> gameObjects;
-        List<GameObject> gameObjectsDead;
+        private List<GameObject> gameObjects;
+        private List<GameObject> gameObjectsDead;
+
         private static GameObjectManager instance;
         public static GameObjectManager Instance
         {

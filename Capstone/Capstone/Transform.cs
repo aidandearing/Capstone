@@ -1,4 +1,5 @@
-﻿using Microsoft.Xna.Framework;
+﻿using System;
+using Microsoft.Xna.Framework;
 
 namespace Capstone
 {
@@ -85,9 +86,28 @@ namespace Capstone
             transformation.Translation += vector;
         }
 
-        public void Rotate(float angle)
+        /// <summary>
+        /// Rotates the transformation without altering the translation
+        /// </summary>
+        /// <param name="axis">the axis by which to rotate around</param>
+        /// <param name="angle">the angle in radians to rotate by</param>
+        public void Rotate(Vector3 axis, float angle)
         {
             // Ahk
+            Vector3 translation = transformation.Translation;
+            transformation *= Matrix.CreateFromAxisAngle(axis, angle);
+            transformation.Translation = translation;
+        }
+
+        /// <summary>
+        /// Rotates the transformation purely
+        /// </summary>
+        /// <param name="axis">the axis by which to rotate around</param>
+        /// <param name="angle">the angle in radians to rotate by</param>
+        [Obsolete("Use this if you want to create a purely mathematical rotation")]
+        public void PureRotate(Vector3 axis, float angle)
+        {
+            transformation *= Matrix.CreateFromAxisAngle(axis, angle);
         }
     }
 }

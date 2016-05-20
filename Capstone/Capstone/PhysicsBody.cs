@@ -13,6 +13,11 @@ namespace Capstone
         public GameObject gameObject;
         public Shape shape;
 
+        /// <summary>
+        /// transform stores all the physics forces acting on the body in matrix form
+        /// </summary>
+        private Matrix transform;
+
         // This list is referenced in Physic's callback registery
         public List<Collision.OnCollision> collisionCallbacks;
         // This list is referenced in Physic's collision registery
@@ -31,7 +36,8 @@ namespace Capstone
 
         public void Update()
         {
-
+            // I need to construct the transform for this
+            gameObject.transform.Transformation += transform;
         }
 
         public void RegisterCollisionCallback(Collision.OnCollision callback)

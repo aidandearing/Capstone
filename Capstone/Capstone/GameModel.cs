@@ -18,7 +18,7 @@ namespace Capstone
         void IGameObjectRenderable.Render()
         {
             //model.Draw(Physics.WorldToRender(Camera.Transformation.Transformation + parent.transform.Transformation), Camera.View, Camera.Projection);
-            model.Draw(Matrix.Identity + Physics.WorldToRender(Camera.Transformation.Transformation + parent.transform.Transformation), Camera.View, Camera.Projection);
+            model.Draw(Physics.WorldToRender(Camera.Transformation.Transformation + parent.transform.Transformation), Camera.View, Camera.Projection);
         }
 
         public static GameModel MakeGameModel(GameObject parent, string name)

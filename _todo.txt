@@ -1,0 +1,6 @@
+Physics
+	Solve difference between models and physics
+		Currently to move 1 metre a model must be moved 200 units
+		Fix implementation of worldToRender to account for this
+		worldToRender
+		renderToWorld -> Inverse of worldToRender

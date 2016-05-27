@@ -5,8 +5,6 @@ namespace Capstone
 {
     class Camera : GameComponent
     {
-        private static float helper_IsometricValue = (float)Math.Atan(1.0f / Math.Sqrt(2.0f));
-
         private static Camera instance;
         public static Camera Instance(Game game)
         {
@@ -31,14 +29,24 @@ namespace Capstone
                 return instance.projection;
             }
         }
+        private Transform transform;
+        public static Transform Transformation
+        {
+            get
+            {
+                return instance.transform;
+            }
+        }
 
         public override void Initialize()
         {
-            Vector3 position = new Vector3(10, 10 + helper_IsometricValue, 10);
+            Vector3 position = new Vector3((float)Math.Cos(Math.PI / 4.0f), (float)Math.Atan(1.0f / Math.Sqrt(2.0f)), (float)Math.Sin(Math.PI / 4.0f));
             Vector3 lookAt = new Vector3(0, 0, 0);
             view = Matrix.CreateLookAt(position, lookAt, Vector3.Up);
 
             projection = Matrix.CreateOrthographic(GraphicsHelper.screen.Width, GraphicsHelper.screen.Height, -1000, 1000);
+
+            transform = new Transform();
 
             base.Initialize();
         }

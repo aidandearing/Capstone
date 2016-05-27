@@ -5,6 +5,19 @@ namespace Capstone
 {
     class Physics : GameComponent
     {
+        private Matrix worldToRender;
+        private Matrix renderToWorld;
+
+        public static Matrix WorldToRender(Matrix matrix)
+        {
+            return matrix * instance.worldToRender;
+        }
+
+        public static Matrix RenderToWorld(Matrix matrix)
+        {
+            return matrix * instance.renderToWorld;
+        }
+
         #region Singleton
         // Singleton ////////////////////////////////////////////////////////////////////////////////////////////////////////////////
         // This region contains all the singleton methods and variables
@@ -125,6 +138,9 @@ namespace Capstone
             bodies_All = new List<PhysicsBody>();
             bodies_Active = new List<PhysicsBody>();
             bodies_Dead = new List<PhysicsBody>();
+
+            worldToRender = Matrix.CreateScale(200f);
+            renderToWorld = Matrix.CreateScale(1 / 200.0f);
 
             base.Initialize();
         }

@@ -99,6 +99,11 @@ namespace Capstone
             transformation.Translation = translation;
         }
 
+        public void Scale(Vector3 scale)
+        {
+            transformation.Scale = scale;
+        }
+
         /// <summary>
         /// Rotates the transformation purely
         /// </summary>

@@ -1,6 +1,5 @@
 ﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
-using Microsoft.Xna.Framework.Input;
 using System.Collections.Generic;
 
 namespace Capstone
@@ -18,10 +17,8 @@ namespace Capstone
 
         void IGameObjectRenderable.Render()
         {
-            // It needs the transform matrix DONE
-            // It needs the camera view matrix
-            // It needs the projection matrix
-            model.Draw(parent.transform.Transformation, Camera.View, Camera.Projection);
+            //model.Draw(Physics.WorldToRender(Camera.Transformation.Transformation + parent.transform.Transformation), Camera.View, Camera.Projection);
+            model.Draw(Matrix.Identity + Physics.WorldToRender(Camera.Transformation.Transformation + parent.transform.Transformation), Camera.View, Camera.Projection);
         }
 
         public static GameModel MakeGameModel(GameObject parent, string name)

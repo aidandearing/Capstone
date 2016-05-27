@@ -1,8 +1,6 @@
 ﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
-using System;
-using System.Reflection;
 
 namespace Capstone
 {
@@ -80,7 +78,7 @@ namespace Capstone
             // TODO: use this.Content to load your game content here
             obj = new GameObject("wall");
             obj.transform.Translate(new Vector3(0, 0, 0));
-            obj.AddComponent(GameModel.MakeGameModel(obj, "BasicWall"));
+            obj.AddComponent(GameModel.MakeGameModel(obj, "FloorTile"));
         }
 
         /// <summary>
@@ -117,8 +115,8 @@ namespace Capstone
 
             // TODO: Add your drawing code here
             obj.Render();
-            //obj.transform.Rotate(new Vector3(0, 1, 0), 0.01f);
-            //obj.transform.Translate(new Vector3(0, 0, 1f));
+
+            Camera.Transformation.Translate(new Vector3(0.01f, 0, 0));
 
             base.Draw(gameTime);
         }

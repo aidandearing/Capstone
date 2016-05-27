@@ -1,10 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace Capstone
+﻿namespace Capstone
 {
     class Collision
     {
@@ -16,9 +10,62 @@ namespace Capstone
         public PhysicsBody BodyB;
         public CollisionType type;
 
-        void Collide(Collision collision)
+        private Collision(PhysicsBody A, PhysicsBody B)
         {
-            type = CollisionType.none;
+            BodyA = A;
+            BodyB = B;
+        }
+
+        /// <summary>
+        /// Call this method to test collisions
+        /// This method wants to be called as the last piece of a collision pass, after all definite non-collisions have been ruled out
+        /// </summary>
+        /// <param name="BodyA">The first body</param>
+        /// <param name="BodyB">The second body</param>
+        /// <returns>An instance of Collision</returns>
+        public static Collision Evaluate(PhysicsBody bodyA, PhysicsBody bodyB)
+        {
+            // This needs to evaluate whether these 2 bodies already have a Collision between them, if so, evaluate it, and return it
+            // If they don't it needs to make one, if they are colliding
+            // If they aren't colliding return a new Collision with CollisionType none
+
+            Collision collision;
+
+            // Neither body has any collisions
+            if (bodyA.collisions.Count == bodyB.collisions.Count && bodyA.collisions.Count == 0)
+            {
+                // A new collision should be made
+                collision = new Collision(bodyA, bodyB);
+            }
+
+            // An optimisation here is to check the smaller list of collisions
+            // Since it is an iteration
+            if (bodyA.collisions.Count <= bodyB.collisions.Count)
+            {
+                 collision = Helper_EvaluateCollisions(bodyA, bodyB);
+            }
+            else
+            {
+                collision = Helper_EvaluateCollisions(bodyB, bodyA);
+            }
+
+            // Evaluate the collision
+            collision.Evaluate();
+            // Return it
+            return collision;
+        }
+
+        private static Collision Helper_EvaluateCollisions(PhysicsBody bodyA, PhysicsBody bodyB)
+        {
+            foreach (Collision collision in bodyA.collisions)
+            {
+                if (collision.BodyB == bodyB)
+                {
+                    return collision;
+                }
+            }
+
+            return new Collision(bodyA, bodyB);
         }
 
         /// <summary>

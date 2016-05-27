@@ -27,7 +27,7 @@ namespace Capstone
         /// <returns>Whether a collision is occuring or not</returns>
         bool Evaluate()
         {
-            bool test = BodyA.shape.Test(BodyB.shape);
+            bool test = BodyA.shape.OverlapTest(BodyB.shape);
 
             // If the test returns true, collision is occuring
 

@@ -1,50 +1,55 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Collections.Generic;
+using Microsoft.Xna.Framework;
 
 namespace Capstone
 {
-    class Physics
+    class Physics : GameComponent
     {
-        // Stores all collision callbacks in PhysicsBody key, list of callbacks form
-        private Dictionary<PhysicsBody, List<Collision.OnCollision>> registeryCollisionCallbacks;
-        // Stores all the active collisions in PhysicsBody key, list of collisions form
-        private Dictionary<PhysicsBody, List<Collision>> registeryActiveCollisions;
+        #region Singleton
+        // Singleton ////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+        // This region contains all the singleton methods and variables
 
-        private List<PhysicsBody> activeBodies;
-        private List<PhysicsBody> deadBodies;
-
-        // Singleton
         private static Physics instance;
-        public static Physics Instance()
+        /// <summary>
+        /// DO NOT USE THIS
+        /// Unless you are stupid, or doing something sweet
+        /// </summary>
+        /// <param name="game">The Game instance running</param>
+        /// <returns>The Physics instance running</returns>
+        public static Physics Instance(Game game)
         {
-            instance = (instance == null) ? new Physics() : instance;
+            instance = (instance == null) ? new Physics(game) : instance;
             return instance;
         }
-        private Physics()
+        private Physics(Game game) : base(game)
         {
-            registeryCollisionCallbacks = new Dictionary<PhysicsBody, List<Collision.OnCollision>>();
-
-            activeBodies = new List<PhysicsBody>();
-            deadBodies = new List<PhysicsBody>();
+            
         }
-        // End of Singleton
+        // End of Singleton ////////////////////////////////////////////////////////////////////////////////////////////////////////
+        #endregion
+
+        #region Registries
+        // Registries //////////////////////////////////////////////////////////////////////////////////////////////////////////////
+        // This region contains all the registry add and remove methods as well as the registry variables
+
+        // Stores all collision callbacks in PhysicsBody key, list of callbacks form
+        private Dictionary<PhysicsBody, List<Collision.OnCollision>> registery_CollisionCallbacks;
+        // Stores all the active collisions in PhysicsBody key, list of collisions form
+        private Dictionary<PhysicsBody, List<Collision>> registery_ActiveCollisions;
 
         /// <summary>
         /// Adds a collision delegate to the physics bodies list of callbacks
-        /// This enables something using the delegate to be alerted when the body is question collides with something else
+        /// This enables something using the delegate to be alerted when the body in question collides with something else
         /// </summary>
         /// <param name="callback">The delegate to be added</param>
         /// <param name="body">The body to add the delegate to</param>
-        public void RegisterCollisionCallback(Collision.OnCollision callback, PhysicsBody body)
+        public static void RegisterCollisionCallback(Collision.OnCollision callback, PhysicsBody body)
         {
             // First check to see if the registry contains this key
-            if (!registeryCollisionCallbacks.ContainsKey(body))
+            if (!instance.registery_CollisionCallbacks.ContainsKey(body))
             {
                 // If the registry does not contain the body, add the body, and its list of callbacks
-                registeryCollisionCallbacks.Add(body, body.collisionCallbacks);
+                instance.registery_CollisionCallbacks.Add(body, body.collisionCallbacks);
             }
             // Add the new callback to the list
             body.collisionCallbacks.Add(callback);
@@ -55,10 +60,10 @@ namespace Capstone
         /// </summary>
         /// <param name="callback">The delegate to be removed</param>
         /// <param name="body">The body to remove the delegate from</param>
-        public void UnregisterCollisionCallback(Collision.OnCollision callback, PhysicsBody body)
+        public static void UnregisterCollisionCallback(Collision.OnCollision callback, PhysicsBody body)
         {
             // First check to see if the registry contains this key
-            if (registeryCollisionCallbacks.ContainsKey(body))
+            if (instance.registery_CollisionCallbacks.ContainsKey(body))
             {
                 body.collisionCallbacks.Remove(callback);
             }
@@ -69,30 +74,63 @@ namespace Capstone
         /// </summary>
         /// <param name="body">The body to get callbacks from</param>
         /// <returns></returns>
-        public List<Collision.OnCollision> GetCollisionCallbacks(PhysicsBody body)
+        public static List<Collision.OnCollision> GetCollisionCallbacks(PhysicsBody body)
         {
             // First check to see if the registry contains this key
-            if (registeryCollisionCallbacks.ContainsKey(body))
+            if (instance.registery_CollisionCallbacks.ContainsKey(body))
             {
                 // If it has this body, get its list
-                return registeryCollisionCallbacks[body];
+                return instance.registery_CollisionCallbacks[body];
             }
             else
                 return null;
         }
+        // End of Registries ////////////////////////////////////////////////////////////////////////////////////////////////////////
+        #endregion
+        
+        #region Bodies
+        // Bodies ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+        // This region contains all the body methods as well as the body variables
 
-        public void AddPhysicsBody(PhysicsBody body)
+        private List<PhysicsBody> activeBodies;
+        private List<PhysicsBody> deadBodies;
+
+        public static void AddPhysicsBody(PhysicsBody body)
         {
-            activeBodies.Add(body);
+            instance.activeBodies.Add(body);
         }
 
-        public void RemovePhysicsBody(PhysicsBody body)
+        public static void RemovePhysicsBody(PhysicsBody body)
         {
-            deadBodies.Add(body);
+            instance.deadBodies.Add(body);
+        }
+        // End of Bodies ////////////////////////////////////////////////////////////////////////////////////////////////////////////
+        #endregion
+
+        #region GameComponent
+        // GameComponent ////////////////////////////////////////////////////////////////////////////////////////////////////////////
+        // This region contains all the GameComponent overrides
+
+        private Game game;
+
+        /// <summary>
+        /// Initialises the Physics class, this is what enables this class to be used statically
+        /// </summary>
+        public override void Initialize()
+        {
+            registery_CollisionCallbacks = new Dictionary<PhysicsBody, List<Collision.OnCollision>>();
+            registery_ActiveCollisions = new Dictionary<PhysicsBody, List<Collision>>();
+
+            activeBodies = new List<PhysicsBody>();
+            deadBodies = new List<PhysicsBody>();
+
+            base.Initialize();
         }
 
-        public void Step()
+        public override void Update(GameTime gameTime)
         {
+            base.Update(gameTime);
+
             // I want to do some heavy broad phase logic here
             // But for now lets do something linear
             // Update all bodies
@@ -107,11 +145,13 @@ namespace Capstone
                 activeBodies.Remove(body);
 
                 // If they have registered callbacks remove them
-                if (registeryCollisionCallbacks.ContainsKey(body))
+                if (registery_CollisionCallbacks.ContainsKey(body))
                 {
-                    registeryCollisionCallbacks.Remove(body);
+                    registery_CollisionCallbacks.Remove(body);
                 }
             }
         }
+        // End of GameComponent /////////////////////////////////////////////////////////////////////////////////////////////////////
+        #endregion
     }
 }

@@ -31,7 +31,7 @@ namespace Capstone
             collisionCallbacks = new List<Collision.OnCollision>();
             collisions = new List<Collision>();
 
-            Physics.Instance().AddPhysicsBody(this);
+            Physics.AddPhysicsBody(this);
         }
 
         public void Update()
@@ -42,17 +42,17 @@ namespace Capstone
 
         public void RegisterCollisionCallback(Collision.OnCollision callback)
         {
-            Physics.Instance().RegisterCollisionCallback(callback, this);
+            Physics.RegisterCollisionCallback(callback, this);
         }
 
         public void UnregisterCollisionCallback(Collision.OnCollision callback)
         {
-            Physics.Instance().UnregisterCollisionCallback(callback, this);
+            Physics.UnregisterCollisionCallback(callback, this);
         }
 
         public void Remove()
         {
-            Physics.Instance().RemovePhysicsBody(this);
+            Physics.RemovePhysicsBody(this);
         }
     }
 }

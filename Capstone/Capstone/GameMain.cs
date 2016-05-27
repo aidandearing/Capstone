@@ -2,6 +2,7 @@
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 using System;
+using System.Reflection;
 
 namespace Capstone
 {
@@ -51,6 +52,8 @@ namespace Capstone
 
             // Fullscreen functionality
             //graphics.ToggleFullScreen();
+
+            this.Components.Add(Physics.Instance(this));
         }
 
         /// <summary>
@@ -116,8 +119,8 @@ namespace Capstone
 
             // TODO: Add your drawing code here
             obj.Draw();
-            obj.transform.Rotate(new Vector3(0, 1, 0), 0.01f);
-            obj.transform.Translate(new Vector3(0, 0, 1f));
+            //obj.transform.Rotate(new Vector3(0, 1, 0), 0.01f);
+            //obj.transform.Translate(new Vector3(0, 0, 1f));
 
             base.Draw(gameTime);
         }

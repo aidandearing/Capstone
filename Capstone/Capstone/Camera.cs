@@ -1,9 +1,12 @@
 ﻿using Microsoft.Xna.Framework;
+using System;
 
 namespace Capstone
 {
     class Camera
     {
+        private static float helper_IsometricValue = (float)Math.Atan(1.0f / Math.Sqrt(2.0f));
+
         private static Camera instance;
         public static Camera Instance
         {
@@ -16,11 +19,7 @@ namespace Capstone
         }
         private Camera()
         {
-            //projection = Matrix.CreateOrthographic()
-
-            // isometric angle is 35.2º => for -14.1759f Y = 10 Z
-            // I will be normalising this at some point in the future
-            Vector3 position = new Vector3(10, 14.1759f, 10f);
+            Vector3 position = new Vector3(10, 10 + helper_IsometricValue, 10);
             Vector3 lookAt = new Vector3(0, 0, 0);
             view = Matrix.CreateLookAt(position, lookAt, Vector3.Up);
 

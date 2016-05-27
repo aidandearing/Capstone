@@ -21,13 +21,13 @@ namespace Capstone
             return null;
         }
 
-        public override bool Test(Shape shape)
+        public override bool OverlapTest(Shape shape)
         {
             // AABB Intersect logic
             if (shape is Circle)
             {
                 // The Circle already knows how to check against an AABB, why code it again?
-                return shape.Test(this);
+                return shape.OverlapTest(this);
             }
             else if (shape is AABB)
             {
@@ -58,7 +58,7 @@ namespace Capstone
             return true;
         }
 
-        public override bool Intersects(Vector3 point)
+        public override bool Overlap(Vector3 point)
         {
             // AABB Intersect logic
             // If the point is left of the left, no intersect

@@ -17,7 +17,12 @@ namespace Capstone
             return null;
         }
 
-        public override bool Test(Shape shape)
+        /// <summary>
+        /// Tests whether the circle is overlapping another shape
+        /// </summary>
+        /// <param name="shape">The shape to test overlap against</param>
+        /// <returns>True if they are, false if not</returns>
+        public override bool OverlapTest(Shape shape)
         {
             // Circle Intersect logic
             if (shape is Circle)
@@ -39,10 +44,18 @@ namespace Capstone
                 // Check the Circle against the bounding circle of the AABB
                 if (delta.Length() <= Radius() + ((AABB)shape).Diagonal())
                 {
-                    // Now find out if the point on the circles edge along the normal towards the AABB is within the AABB
-                    delta.Normalize();
-                    delta *= points[0].Z;
-                    return ((AABB)shape).Intersects(delta);
+                    // This means the box is fully within the circle
+                    if (delta.Length() <= Radius() - ((AABB)shape).Diagonal())
+                    {
+                        return true;
+                    }
+                    else
+                    {
+                        // Now find out if the point on the circles edge along the normal towards the AABB is within the AABB
+                        delta.Normalize();
+                        delta *= points[0].Z;
+                        return ((AABB)shape).Overlap(delta);
+                    }
                 }
 
                 return false;
@@ -55,7 +68,7 @@ namespace Capstone
             return false;
         }
 
-        public override bool Intersects(Vector3 point)
+        public override bool Overlap(Vector3 point)
         {
             Vector3 delta = point - transform.Position;
 

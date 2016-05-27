@@ -3,7 +3,7 @@ using Microsoft.Xna.Framework;
 
 namespace Capstone
 {
-    class Shape
+    abstract class Shape
     {
         public const int VERTICELIMIT = 16;
 
@@ -38,13 +38,19 @@ namespace Capstone
             return null;
         }
 
-        public virtual bool Test(Shape shape)
+        public virtual bool OverlapTest(Shape shape)
         {
             // SAT
             return true;
         }
 
-        public virtual bool Intersects(Vector3 point)
+        public virtual Shape Overlap(Shape shape)
+        {
+            // SAT
+            return null;
+        }
+
+        public virtual bool Overlap(Vector3 point)
         {
             // ???
             return true;

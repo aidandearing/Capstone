@@ -133,14 +133,6 @@ namespace Capstone
         {
             base.Update(gameTime);
 
-            // I want to do some heavy broad phase logic here
-            // But for now lets do something linear
-            // Update all bodies
-            foreach (PhysicsBody body in bodies_Active)
-            {
-                body.Update();
-            }
-
             // Remove all dead bodies
             foreach (PhysicsBody body in bodies_Dead)
             {

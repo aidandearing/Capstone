@@ -53,8 +53,11 @@
     <Compile Include="GameMain.cs" />
     <Compile Include="GameModel.cs" />
     <Compile Include="GameObject.cs" />
+    <Compile Include="GameObjectComponent.cs" />
     <Compile Include="GraphicsHelper.cs" />
     <Compile Include="GuardController.cs" />
+    <Compile Include="IGameObjectRenderable.cs" />
+    <Compile Include="IGameObjectUpdatable.cs" />
     <Compile Include="Physics.cs" />
     <Compile Include="PhysicsBody.cs" />
     <Compile Include="GameObjectManager.cs" />

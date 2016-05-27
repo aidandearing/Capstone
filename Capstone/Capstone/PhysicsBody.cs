@@ -3,14 +3,13 @@ using System.Collections.Generic;
 
 namespace Capstone
 {
-    class PhysicsBody
+    class PhysicsBody : GameObjectComponent, IGameObjectUpdatable
     {
         public enum BodyType { physics_rigidbody, physics_static, physics_kinematic, physics_trigger };
 
         public int flagBodyType = 0;
         public int flagLayer = 0;
 
-        public GameObject gameObject;
         public Shape shape;
 
         /// <summary>
@@ -23,9 +22,8 @@ namespace Capstone
         // This list is referenced in Physic's collision registery
         public List<Collision> collisions;
 
-        public PhysicsBody(GameObject parent, Shape shape)
+        public PhysicsBody(GameObject parent, Shape shape) : base(parent)
         {
-            gameObject = parent;
             this.shape = shape;
 
             collisionCallbacks = new List<Collision.OnCollision>();
@@ -34,10 +32,10 @@ namespace Capstone
             Physics.AddPhysicsBody(this);
         }
 
-        public void Update()
+        void IGameObjectUpdatable.Update()
         {
             // I need to construct the transform for this
-            gameObject.transform.Transformation += transform;
+            parent.transform.Transformation += transform;
         }
 
         public void RegisterCollisionCallback(Collision.OnCollision callback)

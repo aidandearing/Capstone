@@ -14,8 +14,6 @@ namespace Capstone
         GraphicsDeviceManager graphics;
         SpriteBatch spriteBatch;
 
-        Camera camera;
-
         // Temporary
         GameObject obj;
 
@@ -54,6 +52,7 @@ namespace Capstone
             //graphics.ToggleFullScreen();
 
             this.Components.Add(Physics.Instance(this));
+            this.Components.Add(Camera.Instance(this));
         }
 
         /// <summary>
@@ -65,7 +64,6 @@ namespace Capstone
         protected override void Initialize()
         {
             // TODO: Add your initialization logic here
-            camera = Camera.Instance;
 
             base.Initialize();
         }
@@ -82,7 +80,7 @@ namespace Capstone
             // TODO: use this.Content to load your game content here
             obj = new GameObject("wall");
             obj.transform.Translate(new Vector3(0, 0, 0));
-            obj.model = GameModel.MakeGameModel("BasicWall");
+            obj.AddComponent(GameModel.MakeGameModel(obj, "BasicWall"));
         }
 
         /// <summary>
@@ -118,7 +116,7 @@ namespace Capstone
             GraphicsDevice.Clear(Color.Aquamarine);
 
             // TODO: Add your drawing code here
-            obj.Draw();
+            obj.Render();
             //obj.transform.Rotate(new Vector3(0, 1, 0), 0.01f);
             //obj.transform.Translate(new Vector3(0, 0, 1f));
 

@@ -8,7 +8,13 @@ namespace Capstone
 {
     class GameObject
     {
-        public GameModel model;
+        private List<GameObjectComponent> components;
+
+        public void AddComponent(GameObjectComponent component)
+        {
+            components.Add(component);
+        }
+
         public Transform transform;
 
         public string Name { get; set; }
@@ -17,17 +23,24 @@ namespace Capstone
         {
             transform = new Transform();
             Name = name;
+
+            components = new List<GameObjectComponent>();
         }
 
         public void Update()
         {
-
+            foreach (IGameObjectUpdatable component in components)
+            {
+                component.Update();
+            }
         }
 
-        public void Draw()
+        public void Render()
         {
-            // This will ultimately have some basic occlusion culling logic implemented
-            model.Draw(transform);
+            foreach (IGameObjectRenderable component in components)
+            {
+                component.Render();
+            }
         }
     }
 }

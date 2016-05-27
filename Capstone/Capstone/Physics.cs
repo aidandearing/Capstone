@@ -87,22 +87,23 @@ namespace Capstone
         }
         // End of Registries ////////////////////////////////////////////////////////////////////////////////////////////////////////
         #endregion
-        
+
         #region Bodies
         // Bodies ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////
         // This region contains all the body methods as well as the body variables
 
-        private List<PhysicsBody> activeBodies;
-        private List<PhysicsBody> deadBodies;
+        private List<PhysicsBody> bodies_All;
+        private List<PhysicsBody> bodies_Active;
+        private List<PhysicsBody> bodies_Dead;
 
         public static void AddPhysicsBody(PhysicsBody body)
         {
-            instance.activeBodies.Add(body);
+            instance.bodies_All.Add(body);
         }
 
         public static void RemovePhysicsBody(PhysicsBody body)
         {
-            instance.deadBodies.Add(body);
+            instance.bodies_Dead.Add(body);
         }
         // End of Bodies ////////////////////////////////////////////////////////////////////////////////////////////////////////////
         #endregion
@@ -121,8 +122,9 @@ namespace Capstone
             registery_CollisionCallbacks = new Dictionary<PhysicsBody, List<Collision.OnCollision>>();
             registery_ActiveCollisions = new Dictionary<PhysicsBody, List<Collision>>();
 
-            activeBodies = new List<PhysicsBody>();
-            deadBodies = new List<PhysicsBody>();
+            bodies_All = new List<PhysicsBody>();
+            bodies_Active = new List<PhysicsBody>();
+            bodies_Dead = new List<PhysicsBody>();
 
             base.Initialize();
         }
@@ -134,15 +136,16 @@ namespace Capstone
             // I want to do some heavy broad phase logic here
             // But for now lets do something linear
             // Update all bodies
-            foreach (PhysicsBody body in activeBodies)
+            foreach (PhysicsBody body in bodies_Active)
             {
                 body.Update();
             }
 
             // Remove all dead bodies
-            foreach (PhysicsBody body in deadBodies)
+            foreach (PhysicsBody body in bodies_Dead)
             {
-                activeBodies.Remove(body);
+                bodies_All.Remove(body);
+                bodies_Active.Remove(body);
 
                 // If they have registered callbacks remove them
                 if (registery_CollisionCallbacks.ContainsKey(body))

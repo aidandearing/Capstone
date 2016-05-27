@@ -3,40 +3,47 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Microsoft.Xna.Framework;
 
 namespace Capstone
 {
-    class GameObjectManager
+    class GameObjectManager : DrawableGameComponent
     {
         private List<GameObject> gameObjects;
         private List<GameObject> gameObjectsDead;
 
         private static GameObjectManager instance;
-        public static GameObjectManager Instance
+        public static GameObjectManager Instance(Game game)
         {
-            get
-            {
-                instance = (instance == null) ? new GameObjectManager() : instance;
 
-                return instance;
-            }
+            instance = (instance == null) ? new GameObjectManager(game) : instance;
+
+            return instance;
         }
-        private GameObjectManager()
+        private GameObjectManager(Game game) : base(game)
         {
+           
+        }
+        public static void AddGameObject(GameObject obj)
+        {
+            instance.gameObjects.Add(obj);
+        }
+        public static void RemoveGameObject(GameObject obj)
+        {
+            instance.gameObjectsDead.Add(obj);
+        }
+        public override void Initialize()
+        {
+            base.Initialize();
+
             gameObjects = new List<GameObject>();
 
             gameObjectsDead = new List<GameObject>();
         }
-        public void AddGameObject(GameObject obj)
+        public override void Update(GameTime gameTime)
         {
-            gameObjects.Add(obj);
-        }
-        public void RemoveGameObject(GameObject obj)
-        {
-            gameObjectsDead.Add(obj);
-        }
-        public void Update()
-        {
+            base.Update(gameTime);
+
             foreach (GameObject obj in gameObjects)
             {
                 obj.Update();
@@ -45,7 +52,16 @@ namespace Capstone
             {
                 gameObjects.Remove(obj);
             }
-            gameObjectsDead.Clear(); 
+            gameObjectsDead.Clear();
+        }
+        public override void Draw(GameTime gameTime)
+        {
+            base.Draw(gameTime);
+
+            foreach (GameObject obj in gameObjects)
+            {
+                obj.Render();
+            }
         }
     }
 }

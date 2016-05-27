@@ -93,6 +93,7 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="Content\Assets\Models\BasicDoor.FBX" />
+    <None Include="Content\Assets\Models\BasicSingleWindow.FBX" />
     <None Include="Content\Assets\Models\BasicWall.FBX" />
     <None Include="Content\Assets\Models\BasicWallCorner.FBX" />
     <None Include="Content\Assets\Models\BasicWallCornerShort.FBX" />

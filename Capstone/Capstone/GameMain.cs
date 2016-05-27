@@ -80,7 +80,7 @@ namespace Capstone
             // TODO: use this.Content to load your game content here
             obj = new GameObject("wall");
             obj.transform.Translate(new Vector3(0, 0, 0));
-            obj.AddComponent(GameModel.MakeGameModel(obj, "BasicWall"));
+            obj.AddComponent(GameModel.MakeGameModel(obj, "BasicSingleWindow"));
         }
 
         /// <summary>

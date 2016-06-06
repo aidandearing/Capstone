@@ -5,10 +5,10 @@ namespace Capstone
 {
     class PhysicsBody : GameObjectComponent, IGameObjectUpdatable
     {
-        public enum BodyType { physics_rigidbody, physics_static, physics_kinematic, physics_trigger };
+        public enum BodyType { physics_rigidbody = 0x00, physics_static = 0x01, physics_kinematic = 0x02, physics_trigger = 0x04 };
 
-        public int flagBodyType = 0;
-        public int flagLayer = 0;
+        public BodyType flagBodyType = 0;
+        public short flagLayer = 0;
 
         public Shape shape;
 
@@ -22,9 +22,10 @@ namespace Capstone
         // This list is referenced in Physic's collision registery
         public List<Collision> collisions;
 
-        public PhysicsBody(GameObject parent, Shape shape) : base(parent)
+        public PhysicsBody(GameObject parent, Shape shape, BodyType bodyType) : base(parent)
         {
             this.shape = shape;
+            this.flagBodyType = bodyType;
 
             collisionCallbacks = new List<Collision.OnCollision>();
             collisions = new List<Collision>();

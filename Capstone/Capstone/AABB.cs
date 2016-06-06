@@ -9,7 +9,7 @@ namespace Capstone
             float halfwidth = width / 2;
             float halfheight = height / 2;
 
-            points = new Vector3[4];
+            points = new Vector3[2];
             points[0] = new Vector3(-halfwidth, 0, -halfheight);
             points[1] = new Vector3(halfwidth, 0, halfheight);
         }

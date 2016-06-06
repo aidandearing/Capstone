@@ -1,8 +1,11 @@
 ﻿namespace Capstone
 {
+    /// <summary>
+    /// The abstract base class for all GameObjectComponents
+    /// </summary>
     abstract class GameObjectComponent
     {
-        protected GameObject parent;
+        public GameObject parent;
 
         public GameObjectComponent(GameObject parent)
         {

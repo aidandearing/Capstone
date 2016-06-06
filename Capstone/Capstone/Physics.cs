@@ -10,12 +10,12 @@ namespace Capstone
 
         public static Matrix WorldToRender(Matrix matrix)
         {
-            return matrix * instance.worldToRender;
+            return new Matrix(matrix.M11, matrix.M12, matrix.M13, matrix.M14, matrix.M21, matrix.M22, matrix.M23, matrix.M24, matrix.M31, matrix.M32, matrix.M33, matrix.M34, matrix.M41 * instance.worldToRender.M11, matrix.M42 * instance.worldToRender.M22, matrix.M43 * instance.worldToRender.M33, matrix.M44 * instance.worldToRender.M44);
         }
 
         public static Matrix RenderToWorld(Matrix matrix)
         {
-            return matrix * instance.renderToWorld;
+            return new Matrix(matrix.M11, matrix.M12, matrix.M13, matrix.M14, matrix.M21, matrix.M22, matrix.M23, matrix.M24, matrix.M31, matrix.M32, matrix.M33, matrix.M34, matrix.M41 * instance.renderToWorld.M11, matrix.M42 * instance.renderToWorld.M22, matrix.M43 * instance.renderToWorld.M33, matrix.M44 * instance.renderToWorld.M44);
         }
 
         #region Singleton
@@ -109,16 +109,44 @@ namespace Capstone
         private List<PhysicsBody> bodies_Active;
         private List<PhysicsBody> bodies_Dead;
 
-        public static void AddPhysicsBody(PhysicsBody body)
-        {
-            instance.bodies_All.Add(body);
-        }
-
         public static void RemovePhysicsBody(PhysicsBody body)
         {
             instance.bodies_Dead.Add(body);
         }
         // End of Bodies ////////////////////////////////////////////////////////////////////////////////////////////////////////////
+        #endregion
+
+        #region Broad Phase
+        // Broad Phase //////////////////////////////////////////////////////////////////////////////////////////////////////////////
+        // This region contains all the broad phase members and functions
+
+        private PhysicsBoundingBox[] static_bounds;
+        private int static_bounds_Width;
+
+        /// <summary>
+        /// Adds a PhysicsBody to the Physics engine, bodies add themselves when made, this rarely needs to be called
+        /// </summary>
+        /// <param name="body">The body to be added</param>
+        public static void AddPhysicsBody(PhysicsBody body)
+        {
+            instance.bodies_All.Add(body);
+
+            // Check to see if the body is set to be static, if so it should be placed in the static_bounds array
+            if (body.flagBodyType.HasFlag(PhysicsBody.BodyType.physics_static))
+            {
+                // Go through each bounding box container class
+                foreach (PhysicsBoundingBox bounds in instance.static_bounds)
+                {
+                    // Test if the body is overlapping the bounds
+                    if (bounds.TestBody(body))
+                    {
+                        // Add the body to the bounds if it is
+                        bounds.AddBody(body);
+                    }
+                }
+            }
+        }
+        // End of Broad Phase ////////////////////////////////////////////////////////////////////////////////////////////////////////
         #endregion
 
         #region GameComponent

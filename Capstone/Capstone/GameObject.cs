@@ -4,8 +4,16 @@ namespace Capstone
 {
     class GameObject
     {
+        /// <summary>
+        /// This is the list of all components this GameObject has
+        /// Components are where GameObjects draw their behaviours
+        /// </summary>
         private List<GameObjectComponent> components;
 
+        /// <summary>
+        /// Adds a component to the GameObject
+        /// </summary>
+        /// <param name="component">The component to be added</param>
         public void AddComponent(GameObjectComponent component)
         {
             components.Add(component);

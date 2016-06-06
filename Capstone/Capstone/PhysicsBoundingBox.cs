@@ -6,9 +6,9 @@ using System.Threading.Tasks;
 
 namespace Capstone
 {
-    class PhysicsBoundingBox<T>
+    class PhysicsBoundingBox
     {
-        public List<T> bodies;
+        public List<PhysicsBody> bodies;
         public AABB bounds;
 
         public PhysicsBoundingBox(AABB bounds)
@@ -16,7 +16,7 @@ namespace Capstone
             this.bounds = bounds;
         }
 
-        public void AddBody(T body)
+        public void AddBody(PhysicsBody body)
         {
             bodies.Add(body);
         }

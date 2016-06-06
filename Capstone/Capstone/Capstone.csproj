@@ -42,6 +42,7 @@
   </PropertyGroup>
   <ItemGroup>
     <Compile Include="AABB.cs" />
+    <Compile Include="AIController.cs" />
     <Compile Include="Camera.cs" />
     <Compile Include="CameraController.cs" />
     <Compile Include="Circle.cs" />
@@ -57,11 +58,10 @@
     <Compile Include="GuardController.cs" />
     <Compile Include="IGameObjectRenderable.cs" />
     <Compile Include="IGameObjectUpdatable.cs" />
-    <Compile Include="LootableController.cs" />
-    <Compile Include="NPCController.cs" />
     <Compile Include="Physics.cs" />
     <Compile Include="PhysicsBody.cs" />
     <Compile Include="GameObjectManager.cs" />
+    <Compile Include="PhysicsBoundingBox.cs" />
     <Compile Include="PlayerController.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -94,8 +94,6 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="Content\Assets\Models\BasicDoor.FBX" />
-    <None Include="Content\Assets\Models\BasicDoubleWindowLeft.FBX" />
-    <None Include="Content\Assets\Models\BasicDoubleWindowRight.FBX" />
     <None Include="Content\Assets\Models\BasicSingleWindow.FBX" />
     <None Include="Content\Assets\Models\BasicWall.FBX" />
     <None Include="Content\Assets\Models\BasicWallCorner.FBX" />

@@ -6,8 +6,12 @@ using System.Threading.Tasks;
 
 namespace Capstone
 {
-    class TripwireController : AIController
+    class TripwireController : Controller
     {
+        public TripwireController(GameObject parent) : base(parent)
+        {
+        }
+
         public override void Update()
         {
         }

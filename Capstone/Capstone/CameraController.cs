@@ -6,8 +6,12 @@ using System.Threading.Tasks;
 
 namespace Capstone
 {
-    class CameraController : AIController
+    class CameraController : Controller
     {
+        public CameraController(GameObject parent) : base(parent)
+        {
+        }
+
         public override void Update()
         {
         }

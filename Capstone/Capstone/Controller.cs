@@ -6,11 +6,17 @@ using System.Threading.Tasks;
 
 namespace Capstone
 {
-    abstract class Controller
+    abstract class Controller : GameObjectComponent, IGameObjectUpdatable
     {
-        public virtual void Update()
-        {
+        protected GameObject parent;
 
+        public Controller(GameObject parent) : base(parent)
+        {
+            this.parent = parent;
         }
+
+        public abstract void Update();
+
+
     }
 }

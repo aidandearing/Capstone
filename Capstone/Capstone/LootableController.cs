@@ -6,8 +6,12 @@ using System.Threading.Tasks;
 
 namespace Capstone
 {
-    class LootableController : AIController
+    class LootableController : Controller
     {
+        public LootableController(GameObject parent) : base(parent)
+        {
+        }
+
         public override void Update()
         {
         }

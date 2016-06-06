@@ -6,8 +6,12 @@ using System.Threading.Tasks;
 
 namespace Capstone
 {
-    class StorageController : AIController
+    class StorageController : Controller
     {
+        public StorageController(GameObject parent) : base(parent)
+        {
+        }
+
         public override void Update()
         {
         }

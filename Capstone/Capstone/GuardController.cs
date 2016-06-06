@@ -6,8 +6,12 @@ using System.Threading.Tasks;
 
 namespace Capstone
 {
-    class GuardContoller : AIController
+    class GuardContoller : Controller
     {
+        public GuardContoller(GameObject parent) : base(parent)
+        {
+        }
+
         public override void Update()
         {
         }

@@ -120,9 +120,6 @@ namespace Capstone
         // Broad Phase //////////////////////////////////////////////////////////////////////////////////////////////////////////////
         // This region contains all the broad phase members and functions
 
-        private PhysicsBoundingBox[] static_bounds;
-        private int static_bounds_Width;
-
         /// <summary>
         /// Adds a PhysicsBody to the Physics engine, bodies add themselves when made, this rarely needs to be called
         /// </summary>
@@ -130,21 +127,6 @@ namespace Capstone
         public static void AddPhysicsBody(PhysicsBody body)
         {
             instance.bodies_All.Add(body);
-
-            // Check to see if the body is set to be static, if so it should be placed in the static_bounds array
-            if (body.flagBodyType.HasFlag(PhysicsBody.BodyType.physics_static))
-            {
-                // Go through each bounding box container class
-                foreach (PhysicsBoundingBox bounds in instance.static_bounds)
-                {
-                    // Test if the body is overlapping the bounds
-                    if (bounds.TestBody(body))
-                    {
-                        // Add the body to the bounds if it is
-                        bounds.AddBody(body);
-                    }
-                }
-            }
         }
         // End of Broad Phase ////////////////////////////////////////////////////////////////////////////////////////////////////////
         #endregion

@@ -70,6 +70,23 @@ namespace Capstone
             Left = transformation.Left;
         }
 
+        public Transform(Matrix m)
+        {
+            transformation = m;
+            Forward = m.Forward;
+            Left = m.Left;
+        }
+
+        public Transform(Vector3 translation, Vector3 scale, Vector3 rotation)
+        {
+            transformation = Matrix.CreateScale(scale) * Matrix.CreateFromYawPitchRoll(rotation.Y, rotation.X, rotation.Z) * Matrix.CreateTranslation(translation);
+        }
+
+        public Transform(Vector3 translation, Vector3 scale, Quaternion rotation)
+        {
+            transformation = Matrix.CreateScale(scale) * Matrix.CreateFromQuaternion(rotation) * Matrix.CreateTranslation(translation);
+        }
+
         public Vector3 WorldToLocal(Vector3 vector)
         {
             return transformation.Translation - vector;

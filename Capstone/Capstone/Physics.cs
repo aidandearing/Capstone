@@ -120,13 +120,27 @@ namespace Capstone
         // Broad Phase //////////////////////////////////////////////////////////////////////////////////////////////////////////////
         // This region contains all the broad phase members and functions
 
+        // TODO decide on how to build these, post scene load, but pre simulation, on the fly, or explicitly?
+        PhysicsBoundingChunk[] bounds;
+
         /// <summary>
-        /// Adds a PhysicsBody to the Physics engine, bodies add themselves when made, this rarely needs to be called
+        /// Adds a PhysicsBody to the Physics engine, bodies add themselves when made, this rarely needs to be called outside of the PhysicsBody constructor
         /// </summary>
         /// <param name="body">The body to be added</param>
         public static void AddPhysicsBody(PhysicsBody body)
         {
             instance.bodies_All.Add(body);
+
+            // TODO decide on the best way of handling how to add bodies to the PhysicsBoundingChunks
+            // Static optimisations (BoundingChunks broadphase system)
+            //if (body.flagBodyType.HasFlag(PhysicsBody.BodyType.physics_static))
+            //{
+            //    for (int i = 0; i < instance.bounds.Length; ++i)
+            //    {
+            //        instance.bounds[i].AddBody(body);
+            //    }
+            //}
+
         }
         // End of Broad Phase ////////////////////////////////////////////////////////////////////////////////////////////////////////
         #endregion

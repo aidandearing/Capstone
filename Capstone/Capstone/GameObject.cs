@@ -6,9 +6,11 @@ namespace Capstone
     {
         /// <summary>
         /// This is the list of all components this GameObject has
-        /// Components are where GameObjects draw their behaviours
+        /// Components are where GameObjects get their behaviours
         /// </summary>
         private List<GameObjectComponent> components;
+        private List<IGameObjectUpdatable> components_updatable;
+        private List<IGameObjectRenderable> components_renderable;
 
         /// <summary>
         /// Adds a component to the GameObject
@@ -17,6 +19,12 @@ namespace Capstone
         public void AddComponent(GameObjectComponent component)
         {
             components.Add(component);
+
+            if (component is IGameObjectUpdatable)
+                components_updatable.Add(component as IGameObjectUpdatable);
+
+            if (component is IGameObjectRenderable)
+                components_renderable.Add(component as IGameObjectRenderable);
         }
 
         public Transform transform;
@@ -29,11 +37,13 @@ namespace Capstone
             Name = name;
 
             components = new List<GameObjectComponent>();
+            components_updatable = new List<IGameObjectUpdatable>();
+            components_renderable = new List<IGameObjectRenderable>();
         }
 
         public void Update()
         {
-            foreach (IGameObjectUpdatable component in components)
+            foreach (IGameObjectUpdatable component in components_updatable)
             {
                 component.Update();
             }
@@ -41,7 +51,7 @@ namespace Capstone
 
         public void Render()
         {
-            foreach (IGameObjectRenderable component in components)
+            foreach (IGameObjectRenderable component in components_renderable)
             {
                 component.Render();
             }

@@ -80,6 +80,11 @@ namespace Capstone
             return false;
         }
 
+        public override AABB GetBoundingBox()
+        {
+            return new AABB(transform, points[0].Z * 2, points[0].Z * 2);
+        }
+
         public float Radius()
         {
             return points[0].Z;

@@ -3,42 +3,12 @@ using System;
 
 namespace Capstone
 {
-    class Camera : GameComponent
+    class Camera : GameObjectComponent, IGameObjectUpdatable
     {
-        private static Camera instance;
-        public static Camera Instance(Game game)
-        {
-            instance = (instance == null) ? new Camera(game) : instance;
-            return instance;
-        }
-        private Camera(Game game) : base(game) { }
+        // TODO A variety of safer static methods to handle main camera and other camera based stuff
+        public static Camera MainCamera;
 
-        private Matrix view;
-        public static Matrix View
-        {
-            get
-            {
-                return instance.view;
-            }
-        }
-        private Matrix projection;
-        public static Matrix Projection
-        {
-            get
-            {
-                return instance.projection;
-            }
-        }
-        private Transform transform;
-        public static Transform Transformation
-        {
-            get
-            {
-                return instance.transform;
-            }
-        }
-
-        public override void Initialize()
+        public Camera(GameObject parent) : base(parent)
         {
             // Isometric stuff
             // Making the camera view matrix rotated properly for the 45 degree arctan(1/sqrt(2)) stuffs that is necessary to create the appearance of 120 degrees between any 2 axis that is necessary for isometric
@@ -49,9 +19,32 @@ namespace Capstone
             // Standard orthographic projection
             projection = Matrix.CreateOrthographic(GraphicsHelper.screen.Width, GraphicsHelper.screen.Height, -1000, 1000);
 
-            transform = new Transform();
-
-            base.Initialize();
+            if (MainCamera == null)
+                MainCamera = this;
         }
+
+        private Matrix view;
+        public Matrix View
+        {
+            get
+            {
+                return view;
+            }
+        }
+        private Matrix projection;
+        public Matrix Projection
+        {
+            get
+            {
+                return projection;
+            }
+        }
+
+        void IGameObjectUpdatable.Update()
+        {
+
+        }
+
+        // TODO probably want to build raycast stuff for cameras at some point in the eventual future
     }
 }

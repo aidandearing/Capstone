@@ -94,7 +94,7 @@
     <MonoGameContentReference Include="Content\Content.mgcb" />
   </ItemGroup>
   <ItemGroup>
-    <Folder Include="Content\Assets\SoundEffects\" />
+    <Folder Include="Content\Assets\Sounds\" />
     <Folder Include="Content\Assets\Textures\" />
     <Folder Include="Content\Assets\XML\" />
     <Folder Include="Content\UI\Screens\" />

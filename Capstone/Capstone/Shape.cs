@@ -54,5 +54,11 @@ namespace Capstone
             // ???
             return true;
         }
+
+        public virtual AABB GetBoundingBox()
+        {
+            // Get min and max values of cloud of points, build AABB that encompasses said points
+            return null;
+        }
     }
 }

@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System;
 using Microsoft.Xna.Framework;
 
 namespace Capstone
@@ -121,7 +122,23 @@ namespace Capstone
         // This region contains all the broad phase members and functions
 
         // TODO decide on how to build these, post scene load, but pre simulation, on the fly, or explicitly?
-        PhysicsBoundingChunk[] bounds;
+        // Post scene load:
+        // Compute the bounds of all static bodies and build the array of BoundingChunks to match this, using a method call
+        // Much like Explicity this has the added bonus of allowing us to quickly compute the general area of boundingchunks to check based on a non static bodies transform
+        // On the fly:
+        // As static bodies are added find out if they are within any preexisting bounding chunks, if they aren't, build a new one that fits on a grid with the others, and put the body in it
+        // This has very few optimisations based on transform, but can allow the world to easily take on any shape and still function without wasting time with bounding chunks that are empty, due to being a rigid rectangle of chunks
+        // Explicity:
+        // Force the coder to call a method that requires the exact dimensions of the world and builds the array of bounding chunks appropriately
+        // Much like Post scene load the benefit comes in knowing where to look in the array given the transform of a body
+
+        // Another option!
+        // Use a list of BoundingChunks, for on the fly behaviour, but enable them to bind themselves to a dictionary of int -> boundingchunks
+        // Store the first bounds position, assume it is index 0, then make every other bound calculate its index based around that position, and force all bodies that want to quickly check the bounds around themselves to do the same
+        //PhysicsBoundingChunk[] bounds;
+        List<PhysicsBoundingChunk> bounds;
+        Dictionary<int, PhysicsBoundingChunk> bounds_hashtable;
+        Transform bounds_transform;
 
         /// <summary>
         /// Adds a PhysicsBody to the Physics engine, bodies add themselves when made, this rarely needs to be called outside of the PhysicsBody constructor
@@ -141,6 +158,43 @@ namespace Capstone
             //    }
             //}
 
+            if (body.flagBodyType.HasFlag(PhysicsBody.BodyType.physics_static))
+            {
+                if (instance.bounds == null)
+                {
+                    instance.bounds = new List<PhysicsBoundingChunk>();
+                    instance.bounds_hashtable = new Dictionary<int, PhysicsBoundingChunk>();
+
+                    float x = (int)Math.Floor(body.parent.transform.Position.X / 8) * 8;
+                    float z = (int)Math.Floor(body.parent.transform.Position.Z / 8) * 8;
+
+                    instance.bounds_transform = new Transform();
+                    instance.bounds_transform.Transformation = Matrix.CreateTranslation(x, 0, z);
+
+                    instance.bounds.Add(new PhysicsBoundingChunk(instance.bounds_transform));
+                    instance.bounds_hashtable.Add(0, instance.bounds[0]);
+
+                    // If the body is so large that it takes up more than 1 chunk I need to know that, and build all the chunks it is in around the one at its center
+                    // TODO Build functionality that enables large objects to still generate the appropriate amount of chunks to encase them entirely
+                }
+                //else
+                //{
+                //    int index = CalculateBoundsIndex(body);
+
+                //    if (instance.bounds_hashtable.ContainsKey(index))
+                //    {
+
+                //    }
+                //}
+            }
+        }
+
+        private static int CalculateBoundsIndex(PhysicsBody body)
+        {
+            int x = (int)Math.Floor(body.parent.transform.Position.X / 8) * 8;
+            int z = (int)Math.Floor(body.parent.transform.Position.Z / 8) * 8;
+
+            return x + z * int.MaxValue;
         }
         // End of Broad Phase ////////////////////////////////////////////////////////////////////////////////////////////////////////
         #endregion
@@ -163,8 +217,9 @@ namespace Capstone
             bodies_Active = new List<PhysicsBody>();
             bodies_Dead = new List<PhysicsBody>();
 
-            worldToRender = Matrix.CreateScale(200f);
-            renderToWorld = Matrix.CreateScale(1 / 200.0f);
+            // Jenky as magic numbers, sorry. Works out this way for the scale we decided on in 3DSMax.
+            worldToRender = Matrix.CreateScale(100f);
+            renderToWorld = Matrix.CreateScale(1 / 100.0f);
 
             base.Initialize();
         }

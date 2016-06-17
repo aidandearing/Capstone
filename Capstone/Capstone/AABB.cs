@@ -77,6 +77,11 @@ namespace Capstone
             return true;
         }
 
+        public override AABB GetBoundingBox()
+        {
+            return this;
+        }
+
         public Vector3 Left()
         {
             return transform.Position + new Vector3(points[0].X, 0, 0);
@@ -100,6 +105,11 @@ namespace Capstone
         public float Diagonal()
         {
             return points[2].Length();
+        }
+
+        public Vector3 Dimensions()
+        {
+            return new Vector3(points[1].X * 2, 0, points[1].Z * 2);
         }
     }
 }

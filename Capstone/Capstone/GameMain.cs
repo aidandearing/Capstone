@@ -51,9 +51,6 @@ namespace Capstone
             //graphics.ToggleFullScreen();
 
             this.Components.Add(Physics.Instance(this));
-            this.Components.Add(Camera.Instance(this));
-            
-            
         }
 
         /// <summary>
@@ -80,6 +77,8 @@ namespace Capstone
             obj.transform.Translate(new Vector3(0, 0, 0));
             obj.AddComponent(GameModel.MakeGameModel(obj, "BasicWall"));
             obj.AddComponent(GameModel.MakeGameModel(obj, "FloorTile"));
+            obj.AddComponent(new Camera(obj));
+
             sm = new SoundManager();
             sm.LoadSong("test");
             sm.LoadSong("test2");
@@ -125,8 +124,6 @@ namespace Capstone
             obj.transform.Translate(new Vector3(1, 0, 0));
             obj.Render();
             obj.transform.Translate(new Vector3(-1, 0, 0));
-
-            //Camera.Transformation.Translate(new Vector3(1, 0, 0));
 
             base.Draw(gameTime);
         }

@@ -78,14 +78,6 @@ namespace Capstone
             obj.AddComponent(GameModel.MakeGameModel(obj, "BasicWall"));
             obj.AddComponent(GameModel.MakeGameModel(obj, "FloorTile"));
             obj.AddComponent(new Camera(obj));
-
-            sm = new SoundManager();
-            sm.LoadSong("test");
-            sm.LoadSong("test2");
-            sm.SetSongVolume(0.5f);
-            sm.SetMaxVolume(1f);
-            sm.PlaySong(1, true);
-            
         }
 
         /// <summary>

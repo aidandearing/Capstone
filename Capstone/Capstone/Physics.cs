@@ -165,6 +165,7 @@ namespace Capstone
                     instance.bounds = new List<PhysicsBoundingChunk>();
                     instance.bounds_hashtable = new Dictionary<int, PhysicsBoundingChunk>();
 
+                    // TODO allow PhysicsBoundingChunks to be more adaptable, not so hard coded for our specific games case (maybe?)
                     float x = (int)Math.Floor(body.parent.transform.Position.X / 8) * 8;
                     float z = (int)Math.Floor(body.parent.transform.Position.Z / 8) * 8;
 
@@ -173,9 +174,40 @@ namespace Capstone
 
                     instance.bounds.Add(new PhysicsBoundingChunk(instance.bounds_transform));
                     instance.bounds_hashtable.Add(0, instance.bounds[0]);
+                    instance.bounds[0].AddBody(body);
 
                     // If the body is so large that it takes up more than 1 chunk I need to know that, and build all the chunks it is in around the one at its center
                     // TODO Build functionality that enables large objects to still generate the appropriate amount of chunks to encase them entirely
+
+                    int dimension = 3;
+                    int count = 0;
+                    bool tobig = false;
+                    Transform newTransform = new Transform();
+                    while (!tobig)
+                    {
+                        for (int i_x = 0; x < dimension; ++x)
+                        {
+                            for (int i_z = 0; z < dimension; ++z)
+                            {
+                                if (i_x == 0 || i_x == dimension - 1 || i_z == 0 || i_z == dimension - 1)
+                                {
+                                    newTransform.Transformation = Matrix.CreateTranslation(i_x * 8, 0, i_z * 8) + instance.bounds_transform.Transformation;
+                                    PhysicsBoundingChunk newChunk = new PhysicsBoundingChunk(newTransform);
+                                    if (newChunk.BoundsTest(body))
+                                    {
+                                        instance.bounds.Add(new PhysicsBoundingChunk(instance.bounds_transform));
+                                        instance.bounds_hashtable.Add(CalculateBoundsIndex(newTransform), newChunk);
+                                        instance.bounds[0].AddBody(body);
+                                        count++;
+                                    }
+                                }
+                            }
+                        }
+
+                        tobig = (count == 0) ? true : false;
+
+                        count = 0;
+                    }
                 }
                 //else
                 //{
@@ -194,8 +226,17 @@ namespace Capstone
             int x = (int)Math.Floor(body.parent.transform.Position.X / 8) * 8;
             int z = (int)Math.Floor(body.parent.transform.Position.Z / 8) * 8;
 
-            return x + z * int.MaxValue;
+            return (x - (int)instance.bounds_transform.Position.X) + (z - (int)instance.bounds_transform.Position.Z) * (int)Math.Sqrt(int.MaxValue);
         }
+
+        private static int CalculateBoundsIndex(Transform transform)
+        {
+            int x = (int)Math.Floor(transform.Position.X / 8) * 8;
+            int z = (int)Math.Floor(transform.Position.Z / 8) * 8;
+
+            return (x - (int)instance.bounds_transform.Position.X) + (z - (int)instance.bounds_transform.Position.Z) * (int)Math.Sqrt(int.MaxValue);
+        }
+
         // End of Broad Phase ////////////////////////////////////////////////////////////////////////////////////////////////////////
         #endregion
 

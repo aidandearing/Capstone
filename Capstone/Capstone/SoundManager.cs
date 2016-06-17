@@ -9,109 +9,66 @@ using Microsoft.Xna.Framework.Media;
 
 namespace Capstone
 {
-    class SoundManager
+    class SoundManager : GameComponent
     {
-        List<Song> songs;
-        List<SoundEffect> soundEffects;
-        float maxVolume;
+        private Dictionary<string, SoundEffect> sounds = new Dictionary<string, SoundEffect>();
 
-        public SoundManager()
-        {
-            songs = new List<Song>();
-            soundEffects = new List<SoundEffect>();
+        private static List<GameAudioListener> audioListeners;
 
-        }
-        //Load a song from Content and add it to the list
-        public void LoadSong(string songName)
+        private static SoundManager instance;
+
+        public static SoundManager Instance(Game game)
         {
-            songs.Add(ContentHelper.Content.Load<Song>("Assets/Music/" + songName));
+            instance = (instance == null) ? new SoundManager(game) : instance;
+
+            return instance;
         }
+
+        private SoundManager(Game game) : base(game)
+        {
+        }
+        
         //Load a soundeffect from content and add it to the list
-        public void LoadSoundEffect(string soundName)
+        public static void LoadSound(string soundName)
         {
-            soundEffects.Add(ContentHelper.Content.Load<SoundEffect>("Assets/SoundEffects/" + soundName));
+            instance.sounds.Add(soundName, ContentHelper.Content.Load<SoundEffect>("Assets/SoundEffects/" + soundName));
         }
-        //Play the song at the index provided
-        public void PlaySong(int index, bool shouldLoop)
+        public static void PlaySound(string soundName)
         {
-            MediaPlayer.Play(songs[index]);
+            instance.sounds[soundName].CreateInstance().Play();
+        }
+        //play a sound and set the volume, panning and pitch 
+        public static void PlaySound(string soundName, float volume, float panAmount, float pitch)
+        {
+            SoundEffectInstance sfi = instance.sounds[soundName].CreateInstance();
 
-            //loop the song when its over
-            if (shouldLoop)
+            MathHelper.Clamp(volume, 0f, 1f);
+
+            MathHelper.Clamp(panAmount, -1f, 1f);
+
+            MathHelper.Clamp(pitch, -1f, 1f);
+
+            sfi.Volume = volume;
+            sfi.Pan = panAmount;
+            sfi.Pitch = pitch;
+            sfi.Play();
+        }
+        //play a sound in 3d space
+        public static void PlaySound(string soundName, Vector3 position)
+        {
+            AudioEmitter audioEmitter = new AudioEmitter();
+
+            audioEmitter.Position = position;
+
+            foreach (GameAudioListener gameAudioListener in audioListeners)
             {
-                MediaPlayer.IsRepeating = true;
-            }
-            else
-            {
-                MediaPlayer.IsRepeating = false;
+                instance.sounds[soundName].CreateInstance().Apply3D(gameAudioListener.audioListener, audioEmitter);
             }
         }
-        //stop the current song playing
-        public void StopSong()
+        public static void AddAudioListener(GameAudioListener audioListener)
         {
-            MediaPlayer.Stop();
+            audioListeners.Add(audioListener);
         }
-        //pause the current song playing 
-        public void PauseSong()
-        {
-            MediaPlayer.Pause();
-        }
-        //resume the current song from the position it was paused at
-        public void ResumeSong()
-        {
-            MediaPlayer.Resume();
-        }
-        //play the soundeffect at the index provided
-        public void PlaySoundEffect(int index)
-        {
-            soundEffects[index].CreateInstance().Play();
-        }
-        //set the volume of the current song
-        public void SetSongVolume(float volumeAmount)
-        {
-            //assure its a value between 0 and 1
-            MathHelper.Clamp(volumeAmount, 0f, 1f);
-
-            MediaPlayer.Volume = volumeAmount;
-        }
-        //set the max volume you wish for the current
-        //used to fade between the current song volume and the max volume desired
-        //if the song wont be doing fading just use SetSongVolume method instead
-        public float SetMaxVolume(float maxAmount)
-        {
-            //assure its a value between 0 and 1
-            MathHelper.Clamp(maxAmount, 0f, 1f);
-
-            maxVolume = maxAmount;
-
-            return maxAmount;
-        }
-        //set the volume of the sound effect at the index provided
-        public void SetSoundEffectVolume(int index, float volumeAmount)
-        {
-            //assure its a value between 0 and 1
-            MathHelper.Clamp(volumeAmount, 0f, 1f);
-
-            soundEffects[index].CreateInstance().Volume = volumeAmount;
-        }
-        //fade out the current song playing 
-        public void FadeOutSong()
-        {
-            MediaPlayer.Volume -= 0.005f;
-
-            MathHelper.Clamp(MediaPlayer.Volume, 0f, 1f);
-        }
-        //fade in the current song playing
-        public void FadeInSong()
-        {
-            MediaPlayer.Volume += 0.005f;
-
-            //assure that the volume of the song will not be any louder than the amount specifed in the SetMaxVolume method 
-            MathHelper.Clamp(MediaPlayer.Volume, 0f, SetMaxVolume(maxVolume));
-        }
-
-
-
-
+       
     }
 }

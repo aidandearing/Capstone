@@ -52,6 +52,7 @@ namespace Capstone
 
             this.Components.Add(Physics.Instance(this));
             this.Components.Add(Camera.Instance(this));
+            this.Components.Add(SongManager.Instance(this));
             
             
         }
@@ -83,12 +84,7 @@ namespace Capstone
             obj.transform.Translate(new Vector3(0, 0, 0));
             obj.AddComponent(GameModel.MakeGameModel(obj, "BasicWall"));
             obj.AddComponent(GameModel.MakeGameModel(obj, "FloorTile"));
-            sm = new SoundManager();
-            sm.LoadSong("test");
-            sm.LoadSong("test2");
-            sm.SetSongVolume(0.5f);
-            sm.SetMaxVolume(1f);
-            sm.PlaySong(1, true);
+            
             
         }
 

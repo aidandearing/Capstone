@@ -56,5 +56,29 @@ namespace Capstone
                 component.Render();
             }
         }
+
+        public GameObjectComponent GetComponent<T>()
+        {
+            foreach (GameObjectComponent component in components)
+            {
+                if (component is T)
+                    return component;
+            }
+
+            return null;
+        }
+
+        public List<GameObjectComponent> GetComponents<T>()
+        {
+            List<GameObjectComponent> returnComponents = new List<GameObjectComponent>();
+
+            foreach (GameObjectComponent component in components)
+            {
+                if (component is T)
+                    returnComponents.Add(component);
+            }
+
+            return returnComponents;
+        }
     }
 }

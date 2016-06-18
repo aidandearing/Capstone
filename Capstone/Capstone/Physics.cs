@@ -192,7 +192,7 @@ namespace Capstone
                                 if (i_x == 0 || i_x == dimension - 1 || i_z == 0 || i_z == dimension - 1)
                                 {
                                     newTransform.Transformation = Matrix.Identity;
-                                    newTransform.Position = new Vector3((i_x - (int)Math.Floor(dimension / 2.0f)) * 8, 0, (i_z - (int)Math.Floor(dimension / 2.0f)) * 8) + instance.bounds_transform.Position;
+                                    newTransform.Position = new Vector3((i_x - (int)Math.Floor(dimension / 2.0f)) * 8, 0, (i_z - (int)Math.Floor(dimension / 2.0f)) * 8) - instance.bounds_transform.Position;
 
                                     PhysicsBoundingChunk newChunk = new PhysicsBoundingChunk(newTransform);
                                     if (newChunk.BoundsTest(body))
@@ -249,7 +249,7 @@ namespace Capstone
                                 if (i_x == 0 || i_x == dimension - 1 || i_z == 0 || i_z == dimension - 1)
                                 {
                                     newTransform.Transformation = Matrix.Identity;
-                                    newTransform.Position = new Vector3((i_x - (int)Math.Floor(dimension / 2.0f)) * 8, 0, (i_z - (int)Math.Floor(dimension / 2.0f)) * 8) + instance.bounds_transform.Position;
+                                    newTransform.Position = new Vector3((i_x - (int)Math.Floor(dimension / 2.0f)) * 8 + x * 8, 0, (i_z - (int)Math.Floor(dimension / 2.0f)) * 8 + z * 8) - instance.bounds_transform.Position;
                                     int newIndex = CalculateBoundsIndex(newTransform);
 
                                     if (instance.bounds_hashtable.ContainsKey(newIndex))
@@ -289,7 +289,37 @@ namespace Capstone
             int x = (int)Math.Floor(transform.Position.X / 8);
             int z = (int)Math.Floor(transform.Position.Z / 8);
 
-            return (x - (int)instance.bounds_transform.Position.X) + (z - (int)instance.bounds_transform.Position.Z) * (int)Math.Sqrt(int.MaxValue / 2) + int.MaxValue / 2;
+            return (x - (int)instance.bounds_transform.Position.X) + (z - (int)instance.bounds_transform.Position.Z) * (int)Math.Sqrt(int.MaxValue / 2);
+        }
+
+        public static List<int> CalculateBoundsIndices(PhysicsBody body)
+        {
+            List<int> indices = new List<int>();
+            AABB boundingBox = body.shape.GetBoundingBox();
+            int dimension = (int)Math.Max(boundingBox.Dimensions().X, boundingBox.Dimensions().Z) / 4;
+
+            int x = (int)Math.Floor(body.parent.transform.Position.X / 8);
+            int z = (int)Math.Floor(body.parent.transform.Position.Z / 8);
+
+            indices.Add((x - (int)instance.bounds_transform.Position.X) + (z - (int)instance.bounds_transform.Position.Z) * (int)Math.Sqrt(int.MaxValue / 2));
+
+            for (int i_x = 0; i_x < dimension; ++i_x)
+            {
+                for (int i_z = 0; i_z < dimension; ++i_z)
+                {
+                    if (i_x == 0 || i_x == dimension - 1 || i_z == 0 || i_z == dimension - 1)
+                    {
+                        Transform newTransform = new Transform();
+                        newTransform.Transformation = Matrix.Identity;
+                        newTransform.Position = new Vector3((i_x - (int)Math.Floor(dimension / 2.0f)) * 8 + x * 8, 0, (i_z - (int)Math.Floor(dimension / 2.0f)) * 8 + z * 8) - instance.bounds_transform.Position;
+                        int newIndex = CalculateBoundsIndex(newTransform);
+                        if (!indices.Contains(newIndex))
+                            indices.Add(newIndex);
+                    }
+                }
+            }
+
+            return indices;
         }
 
         // End of Broad Phase ////////////////////////////////////////////////////////////////////////////////////////////////////////

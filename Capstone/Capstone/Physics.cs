@@ -170,11 +170,11 @@ namespace Capstone
                     float z = (int)Math.Floor(body.parent.transform.Position.Z / 8) * 8;
 
                     instance.bounds_transform = new Transform();
-                    instance.bounds_transform.Transformation = Matrix.CreateTranslation(x, 0, z);
+                    instance.bounds_transform.Position = new Vector3(x, 0, z);
 
                     instance.bounds.Add(new PhysicsBoundingChunk(instance.bounds_transform));
-                    instance.bounds_hashtable.Add(0, instance.bounds[0]);
-                    instance.bounds[0].AddBody(body);
+                    instance.bounds_hashtable.Add(CalculateBoundsIndex(instance.bounds_transform), instance.bounds[0]);
+                    instance.bounds[instance.bounds.Count - 1].AddBody(body);
 
                     // If the body is so large that it takes up more than 1 chunk I need to know that, and build all the chunks it is in around the one at its center
                     // TODO Build functionality that enables large objects to still generate the appropriate amount of chunks to encase them entirely
@@ -185,19 +185,21 @@ namespace Capstone
                     Transform newTransform = new Transform();
                     while (!tobig)
                     {
-                        for (int i_x = 0; x < dimension; ++x)
+                        for (int i_x = 0; i_x < dimension; ++i_x)
                         {
-                            for (int i_z = 0; z < dimension; ++z)
+                            for (int i_z = 0; i_z < dimension; ++i_z)
                             {
                                 if (i_x == 0 || i_x == dimension - 1 || i_z == 0 || i_z == dimension - 1)
                                 {
-                                    newTransform.Transformation = Matrix.CreateTranslation(i_x * 8, 0, i_z * 8) + instance.bounds_transform.Transformation;
+                                    newTransform.Transformation = Matrix.Identity;
+                                    newTransform.Position = new Vector3((i_x - (int)Math.Floor(dimension / 2.0f)) * 8, 0, (i_z - (int)Math.Floor(dimension / 2.0f)) * 8) + instance.bounds_transform.Position;
+
                                     PhysicsBoundingChunk newChunk = new PhysicsBoundingChunk(newTransform);
                                     if (newChunk.BoundsTest(body))
                                     {
                                         instance.bounds.Add(new PhysicsBoundingChunk(instance.bounds_transform));
                                         instance.bounds_hashtable.Add(CalculateBoundsIndex(newTransform), newChunk);
-                                        instance.bounds[0].AddBody(body);
+                                        newChunk.AddBody(body);
                                         count++;
                                     }
                                 }
@@ -207,34 +209,87 @@ namespace Capstone
                         tobig = (count == 0) ? true : false;
 
                         count = 0;
+                        dimension += 2;
                     }
                 }
-                //else
-                //{
-                //    int index = CalculateBoundsIndex(body);
+                else
+                {
+                    int index = CalculateBoundsIndex(body.parent.transform);
 
-                //    if (instance.bounds_hashtable.ContainsKey(index))
-                //    {
+                    float x = (int)Math.Floor(body.parent.transform.Position.X / 8) * 8;
+                    float z = (int)Math.Floor(body.parent.transform.Position.Z / 8) * 8;
 
-                //    }
-                //}
+                    instance.bounds_transform = new Transform();
+                    instance.bounds_transform.Position = new Vector3(x, 0, z);
+
+                    if (instance.bounds_hashtable.ContainsKey(index))
+                    {
+                        instance.bounds_hashtable[index].AddBody(body);
+                    }
+                    else
+                    {
+                        instance.bounds.Add(new PhysicsBoundingChunk(instance.bounds_transform));
+                        instance.bounds_hashtable.Add(CalculateBoundsIndex(instance.bounds_transform), instance.bounds[0]);
+                        instance.bounds[instance.bounds.Count - 1].AddBody(body);
+                    }
+
+                    // If the body is so large that it takes up more than 1 chunk I need to know that, and build all the chunks it is in around the one at its center
+                    // TODO Build functionality that enables large objects to still generate the appropriate amount of chunks to encase them entirely
+
+                    int dimension = 3;
+                    int count = 0;
+                    bool tobig = false;
+                    Transform newTransform = new Transform();
+                    while (!tobig)
+                    {
+                        for (int i_x = 0; i_x < dimension; ++i_x)
+                        {
+                            for (int i_z = 0; i_z < dimension; ++i_z)
+                            {
+                                if (i_x == 0 || i_x == dimension - 1 || i_z == 0 || i_z == dimension - 1)
+                                {
+                                    newTransform.Transformation = Matrix.Identity;
+                                    newTransform.Position = new Vector3((i_x - (int)Math.Floor(dimension / 2.0f)) * 8, 0, (i_z - (int)Math.Floor(dimension / 2.0f)) * 8) + instance.bounds_transform.Position;
+                                    int newIndex = CalculateBoundsIndex(newTransform);
+
+                                    if (instance.bounds_hashtable.ContainsKey(newIndex))
+                                    {
+                                        if (instance.bounds_hashtable[newIndex].BoundsTest(body))
+                                        {
+                                            instance.bounds_hashtable[newIndex].AddBody(body);
+                                            count++;
+                                        }
+                                    }
+                                    else
+                                    {
+                                        PhysicsBoundingChunk newChunk = new PhysicsBoundingChunk(newTransform);
+                                        if (newChunk.BoundsTest(body))
+                                        {
+                                            instance.bounds.Add(new PhysicsBoundingChunk(instance.bounds_transform));
+                                            instance.bounds_hashtable.Add(newIndex, newChunk);
+                                            newChunk.AddBody(body);
+                                            count++;
+                                        }
+                                    }
+                                }
+                            }
+                        }
+
+                        tobig = (count == 0) ? true : false;
+
+                        count = 0;
+                        dimension += 2;
+                    }
+                }
             }
-        }
-
-        private static int CalculateBoundsIndex(PhysicsBody body)
-        {
-            int x = (int)Math.Floor(body.parent.transform.Position.X / 8) * 8;
-            int z = (int)Math.Floor(body.parent.transform.Position.Z / 8) * 8;
-
-            return (x - (int)instance.bounds_transform.Position.X) + (z - (int)instance.bounds_transform.Position.Z) * (int)Math.Sqrt(int.MaxValue);
         }
 
         private static int CalculateBoundsIndex(Transform transform)
         {
-            int x = (int)Math.Floor(transform.Position.X / 8) * 8;
-            int z = (int)Math.Floor(transform.Position.Z / 8) * 8;
+            int x = (int)Math.Floor(transform.Position.X / 8);
+            int z = (int)Math.Floor(transform.Position.Z / 8);
 
-            return (x - (int)instance.bounds_transform.Position.X) + (z - (int)instance.bounds_transform.Position.Z) * (int)Math.Sqrt(int.MaxValue);
+            return (x - (int)instance.bounds_transform.Position.X) + (z - (int)instance.bounds_transform.Position.Z) * (int)Math.Sqrt(int.MaxValue / 2) + int.MaxValue / 2;
         }
 
         // End of Broad Phase ////////////////////////////////////////////////////////////////////////////////////////////////////////

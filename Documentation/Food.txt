@@ -1,0 +1,12 @@
+Food is a template
+FoodInstance is a flyweight
+FoodModifier is a modifier to a single value on a Food
+FoodInstance stores what modifications it currently has
+Food stores what each modification does to its values
+FoodInstance uses the lists of modifications to figure out what the new values of itself are, based on the Food
+
+FoodModifier should have a type of modification of value (add, subtract, multiply, divide, prepend, append)
+FoodModifier should have a type of modification (cut, diced, ...)
+FoodModifier should have a value reference to the Food's value (food, poison, stack, name)
+
+FoodInstance should resolve the modifications to its base Food, whenever queried for its values

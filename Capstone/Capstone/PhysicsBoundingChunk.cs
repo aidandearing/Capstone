@@ -24,42 +24,61 @@ namespace Capstone
 
         public PhysicsBoundingChunk(Transform transform)
         {
+            // Place the bounding chunk centered at the passed transform (which is placed on a grid of points rounded to the nearest point at the dimensions of the chunk (so no chunks overlap))
             this.transform = transform;
 
+            // Instantiate all the dictionaries
             statics = new Dictionary<AABB, List<PhysicsBody>>();
             indexToOrder = new Dictionary<int, int>();
             orderToIndex = new Dictionary<int, List<AABB>>();
-
-            // Since it is dynamic (or at least not magic valued) it is the sum of all orders
+            
+            // Calculate the sum of powers for the bounding box array
+            // This is the total number of bounding boxes that will be present
             sum = ((int)Math.Pow(4, Properties.Physics.Default.BoundingBox_order) - 1) / (4 - 1);
+            // Instantiate the bounds array
             bounds = new AABB[sum];
-
+            // Instantiate the bounds dimensions array
             bound_dim = new int[Properties.Physics.Default.BoundingBox_order];
             for (int i = Properties.Physics.Default.BoundingBox_order; i > 0; i--)
             {
+                // Assign the dimension values for each order of bounding boxes to the array of dimensions
                 bound_dim[Properties.Physics.Default.BoundingBox_order - i] = (int)Math.Pow(2, i);
             }
 
+            // Store the current index in the array of bounds
             int index = 0;
+            // Iterate the depth of the bounds
             for (int i = 0; i < Properties.Physics.Default.BoundingBox_order; ++i)
             {
+                // Prepare a list of all bounds at this depth
                 List<AABB> orderList = new List<AABB>();
+                // Add the list and the depth to the order dictionary
                 orderToIndex.Add(i, orderList);
 
+                // Calculate the total number of bounds to be made at this depth
                 int numberAtOrder = (int)Math.Pow(4, i);
+                // Calculate the width of bounding boxes at this depth (not their dimensional width, but the actual number of bounds across at this depth)
                 int width = (int)Math.Pow(2, i);
 
+                // Iterate for the total number of bounds to be made at this depth
                 for (int j = 0; j < numberAtOrder; ++j)
                 {
+                    // Add the current index and the current order to the index dictionary
                     indexToOrder.Add(index, i);
 
+                    // Calculate the position of this bounding box
                     Vector3 pos = (new Vector3(j % width, 0, (int)(j / width)) - new Vector3((numberAtOrder - 1) / width, 0, (numberAtOrder - 1) / width) / 2) * bound_dim[i];
 
+                    // Create the transform for this bounding box
                     Transform trans = new Transform(transform.Transformation.Translation + pos, transform.Transformation.Scale, transform.Transformation.Rotation);
+                    // Instantiate the bounding box with the transform, and the dimensions necessary
                     bounds[index] = new AABB(trans, bound_dim[i], bound_dim[i]);
+                    // Add the bounding box to the dictionary of bounding box | list of bodies
                     statics.Add(bounds[index], new List<PhysicsBody>());
 
+                    // Add the bounding box to the list of boxes at this depth
                     orderList.Add(bounds[index]);
+                    // Increment the index so no other bounding box overwrites any other bounding box in the array
                     index++;
                 }
             }

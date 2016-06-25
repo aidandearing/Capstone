@@ -21,10 +21,5 @@ namespace Capstone
 
             SoundManager.AddAudioListener(this);
         }
-
-        public void PlaySound()
-        {
-            
-        }
     }
 }

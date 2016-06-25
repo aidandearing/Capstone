@@ -102,9 +102,19 @@ namespace Capstone
             return transform.Position + new Vector3(0, 0, points[1].Z);
         }
 
+        public Vector3 Min()
+        {
+            return transform.Position + points[0];
+        }
+
+        public Vector3 Max()
+        {
+            return transform.Position + points[1];
+        }
+
         public float Diagonal()
         {
-            return points[2].Length();
+            return points[1].Length();
         }
 
         public Vector3 Dimensions()

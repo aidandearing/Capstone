@@ -78,7 +78,7 @@ namespace Capstone
             obj.AddComponent(GameModel.MakeGameModel(obj, "BasicSingleWindow"));
             obj.AddComponent(GameModel.MakeGameModel(obj, "FloorTile"));
             obj.AddComponent(new Camera(obj));
-            obj.AddComponent(new PhysicsBody(obj, new AABB(obj.transform, 100, 100), PhysicsBody.BodyType.physics_static));
+            obj.AddComponent(new PhysicsBody(obj, new AABB(obj.transform, 1, 1), PhysicsBody.BodyType.physics_static));
 
             Physics.CalculateBoundsIndices(obj.GetComponent<PhysicsBody>() as PhysicsBody);
         }

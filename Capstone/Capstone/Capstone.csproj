@@ -61,6 +61,11 @@
     <Compile Include="LootableController.cs" />
     <Compile Include="NPCController.cs" />
     <Compile Include="Physics.cs" />
+    <Compile Include="Properties\Physics.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTimeSharedInput>True</DesignTimeSharedInput>
+      <DependentUpon>Physics.settings</DependentUpon>
+    </Compile>
     <Compile Include="PhysicsBody.cs" />
     <Compile Include="GameObjectManager.cs" />
     <Compile Include="PhysicsBoundingChunk.cs" />
@@ -71,6 +76,11 @@
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
       <DependentUpon>Resources.resx</DependentUpon>
+    </Compile>
+    <Compile Include="Properties\Settings.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTimeSharedInput>True</DesignTimeSharedInput>
+      <DependentUpon>Settings.settings</DependentUpon>
     </Compile>
     <Compile Include="Shape.cs" />
     <Compile Include="ShapeIntersection.cs" />
@@ -105,6 +115,7 @@
     <Folder Include="Content\World\XML\" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="app.config" />
     <None Include="Content\Assets\Models\BasicDoor.FBX" />
     <None Include="Content\Assets\Models\BasicSingleWindow.FBX" />
     <None Include="Content\Assets\Models\BasicWall.FBX" />
@@ -115,6 +126,14 @@
     <None Include="Content\Assets\Models\FrontBasicWallCorner.FBX" />
     <None Include="Content\Assets\Models\FrontBasicWallCornerShort.FBX" />
     <None Include="Content\Assets\Models\ShortWall.FBX" />
+    <None Include="Properties\Physics.settings">
+      <Generator>SettingsSingleFileGenerator</Generator>
+      <LastGenOutput>Physics.Designer.cs</LastGenOutput>
+    </None>
+    <None Include="Properties\Settings.settings">
+      <Generator>SettingsSingleFileGenerator</Generator>
+      <LastGenOutput>Settings.Designer.cs</LastGenOutput>
+    </None>
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="Properties\Resources.resx">

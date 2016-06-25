@@ -14,88 +14,60 @@ namespace Capstone
     /// </summary>
     class PhysicsBoundingChunk
     {
-        private enum QUAD { All = 0, One = 1, Two = 6, Three = 11, Four = 16 };
-
         private AABB[] bounds;
         private Transform transform;
         private Dictionary<AABB, List<PhysicsBody>> statics;
+        private Dictionary<int, int> indexToOrder;
+        private Dictionary<int, List<AABB>> orderToIndex;
+        private int sum;
+        private int[] bound_dim;
 
         public PhysicsBoundingChunk(Transform transform)
         {
             this.transform = transform;
 
             statics = new Dictionary<AABB, List<PhysicsBody>>();
+            indexToOrder = new Dictionary<int, int>();
+            orderToIndex = new Dictionary<int, List<AABB>>();
 
-            // 21 because:
-            // ┌──────┐
-            // |      |
-            // |      |
-            // └──────┘
-            // +
-            // ┌──┐┌──┐
-            // └──┘└──┘
-            // ┌──┐┌──┐
-            // └──┘└──┘
-            // +
-            // ┌─┐┌─┐┌─┐┌─┐
-            // └─┘└─┘└─┘└─┘
-            // ┌─┐┌─┐┌─┐┌─┐
-            // └─┘└─┘└─┘└─┘
-            // ┌─┐┌─┐┌─┐┌─┐
-            // └─┘└─┘└─┘└─┘
-            // ┌─┐┌─┐┌─┐┌─┐
-            // └─┘└─┘└─┘└─┘ 
-            // = 21
-            bounds = new AABB[21];
+            // Since it is dynamic (or at least not magic valued) it is the sum of all orders
+            sum = ((int)Math.Pow(4, Properties.Physics.Default.BoundingBox_order) - 1) / (4 - 1);
+            bounds = new AABB[sum];
 
-            // Full bounding box, largest pass
-            bounds[(int)QUAD.All] = new AABB(transform, 8, 8);
-
-            // First quad
-            bounds[(int)QUAD.One] = new AABB(new Transform(transform.Transformation.Translation + new Vector3(2, 0, -2), transform.Transformation.Scale, transform.Transformation.Rotation), 4, 4);
-
-            // First quads four subdivisions
-            bounds[(int)QUAD.One + 1] = new AABB(new Transform(bounds[(int)QUAD.One].transform.Transformation.Translation + new Vector3(1, 0, -1), transform.Transformation.Scale, transform.Transformation.Rotation), 2, 2);
-            bounds[(int)QUAD.One + 2] = new AABB(new Transform(bounds[(int)QUAD.One].transform.Transformation.Translation + new Vector3(-1, 0, -1), transform.Transformation.Scale, transform.Transformation.Rotation), 2, 2);
-            bounds[(int)QUAD.One + 3] = new AABB(new Transform(bounds[(int)QUAD.One].transform.Transformation.Translation + new Vector3(-1, 0, 1), transform.Transformation.Scale, transform.Transformation.Rotation), 2, 2);
-            bounds[(int)QUAD.One + 4] = new AABB(new Transform(bounds[(int)QUAD.One].transform.Transformation.Translation + new Vector3(1, 0, 1), transform.Transformation.Scale, transform.Transformation.Rotation), 2, 2);
-
-            // Second quad
-            bounds[(int)QUAD.Two] = new AABB(new Transform(transform.Transformation.Translation + new Vector3(-2, 0, -2), transform.Transformation.Scale, transform.Transformation.Rotation), 4, 4);
-
-            // Second quads four subdivisions
-            bounds[(int)QUAD.Two + 1] = new AABB(new Transform(bounds[(int)QUAD.Two].transform.Transformation.Translation + new Vector3(1, 0, -1), transform.Transformation.Scale, transform.Transformation.Rotation), 2, 2);
-            bounds[(int)QUAD.Two + 2] = new AABB(new Transform(bounds[(int)QUAD.Two].transform.Transformation.Translation + new Vector3(-1, 0, -1), transform.Transformation.Scale, transform.Transformation.Rotation), 2, 2);
-            bounds[(int)QUAD.Two + 3] = new AABB(new Transform(bounds[(int)QUAD.Two].transform.Transformation.Translation + new Vector3(-1, 0, 1), transform.Transformation.Scale, transform.Transformation.Rotation), 2, 2);
-            bounds[(int)QUAD.Two + 4] = new AABB(new Transform(bounds[(int)QUAD.Two].transform.Transformation.Translation + new Vector3(1, 0, 1), transform.Transformation.Scale, transform.Transformation.Rotation), 2, 2);
-            
-            // Third quad
-            bounds[(int)QUAD.Three] = new AABB(new Transform(transform.Transformation.Translation + new Vector3(-2, 0, 2), transform.Transformation.Scale, transform.Transformation.Rotation), 4, 4);
-
-            // Third quads four subdivisions
-            bounds[(int)QUAD.Three + 1] = new AABB(new Transform(bounds[(int)QUAD.Three].transform.Transformation.Translation + new Vector3(1, 0, -1), transform.Transformation.Scale, transform.Transformation.Rotation), 2, 2);
-            bounds[(int)QUAD.Three + 2] = new AABB(new Transform(bounds[(int)QUAD.Three].transform.Transformation.Translation + new Vector3(-1, 0, -1), transform.Transformation.Scale, transform.Transformation.Rotation), 2, 2);
-            bounds[(int)QUAD.Three + 3] = new AABB(new Transform(bounds[(int)QUAD.Three].transform.Transformation.Translation + new Vector3(-1, 0, 1), transform.Transformation.Scale, transform.Transformation.Rotation), 2, 2);
-            bounds[(int)QUAD.Three + 4] = new AABB(new Transform(bounds[(int)QUAD.Three].transform.Transformation.Translation + new Vector3(1, 0, 1), transform.Transformation.Scale, transform.Transformation.Rotation), 2, 2);
-
-            // Fourth quad
-            bounds[(int)QUAD.Four] = new AABB(new Transform(transform.Transformation.Translation + new Vector3(2, 0, 2), transform.Transformation.Scale, transform.Transformation.Rotation), 4, 4);
-
-            // Fourth quads four subdivisions
-            bounds[(int)QUAD.Four + 1] = new AABB(new Transform(bounds[(int)QUAD.Four].transform.Transformation.Translation + new Vector3(1, 0, -1), transform.Transformation.Scale, transform.Transformation.Rotation), 2, 2);
-            bounds[(int)QUAD.Four + 2] = new AABB(new Transform(bounds[(int)QUAD.Four].transform.Transformation.Translation + new Vector3(-1, 0, -1), transform.Transformation.Scale, transform.Transformation.Rotation), 2, 2);
-            bounds[(int)QUAD.Four + 3] = new AABB(new Transform(bounds[(int)QUAD.Four].transform.Transformation.Translation + new Vector3(-1, 0, 1), transform.Transformation.Scale, transform.Transformation.Rotation), 2, 2);
-            bounds[(int)QUAD.Four + 4] = new AABB(new Transform(bounds[(int)QUAD.Four].transform.Transformation.Translation + new Vector3(1, 0, 1), transform.Transformation.Scale, transform.Transformation.Rotation), 2, 2);
-
-            for (short i = 0; i < 21; ++i)
+            bound_dim = new int[Properties.Physics.Default.BoundingBox_order];
+            for (int i = Properties.Physics.Default.BoundingBox_order; i > 0; i--)
             {
-                statics.Add(bounds[i], new List<PhysicsBody>());
+                bound_dim[Properties.Physics.Default.BoundingBox_order - i] = (int)Math.Pow(2, i);
+            }
+
+            int index = 0;
+            for (int i = 0; i < Properties.Physics.Default.BoundingBox_order; ++i)
+            {
+                List<AABB> orderList = new List<AABB>();
+                orderToIndex.Add(i, orderList);
+
+                int numberAtOrder = (int)Math.Pow(4, i);
+                int width = (int)Math.Pow(2, i);
+
+                for (int j = 0; j < numberAtOrder; ++j)
+                {
+                    indexToOrder.Add(index, i);
+
+                    Vector3 pos = (new Vector3(j % width, 0, (int)(j / width)) - new Vector3((numberAtOrder - 1) / width, 0, (numberAtOrder - 1) / width) / 2) * bound_dim[i];
+
+                    Transform trans = new Transform(transform.Transformation.Translation + pos, transform.Transformation.Scale, transform.Transformation.Rotation);
+                    bounds[index] = new AABB(trans, bound_dim[i], bound_dim[i]);
+                    statics.Add(bounds[index], new List<PhysicsBody>());
+
+                    orderList.Add(bounds[index]);
+                    index++;
+                }
             }
         }
 
         public bool BoundsTest(PhysicsBody body)
         {
-            if (!bounds[(int)QUAD.All].OverlapTest(body.shape))
+            if (!bounds[0].OverlapTest(body.shape))
                 return false;
 
             return true;
@@ -114,14 +86,42 @@ namespace Capstone
             {
                 if (BoundsTest(body))
                 {
-                    statics[bounds[(int)QUAD.All]].Add(body);
+                    //statics[bounds[0]].Add(body);
 
                     // Definitely not the fastest way to do this, but the way it is being done, for now.
                     // TODO Add smarter algorithm for checking size of body, skipping adding bodies to smaller bounds lists if body is bigger than all smaller bounds.
-                    for (short i = 1; i < 21; ++i)
+                    //for (short i = 1; i < sum; ++i)
+                    //{
+                    //    if (bounds[i].OverlapTest(body.shape))
+                    //        statics[bounds[i]].Add(body);
+                    //}
+
+                    // This is still slower than it can be. There are better ways of doing this.
+                    // Go through the depths
+                    for (int depth = 0; depth < Properties.Physics.Default.BoundingBox_order; ++depth)
                     {
-                        if (bounds[i].OverlapTest(body.shape))
-                            statics[bounds[i]].Add(body);
+                        // If the body is bigger than the current depth's bounds check it against the current depth
+                        if (body.shape.GetBoundingBox().Diagonal() >= orderToIndex[depth][0].Diagonal())
+                        {
+                            // Foreach bound at the current depth
+                            foreach(AABB bound in orderToIndex[depth])
+                            {
+                                // Check if the object overlaps and add it if it does
+                                if (bound.OverlapTest(body.shape))
+                                    statics[bound].Add(body);
+                            }
+                        }
+                        // If the body is not larger than the current bounds and we are at the end of the depths
+                        else if (depth >= Properties.Physics.Default.BoundingBox_order)
+                        {
+                            // Go through each bound at this depth (the final depth)
+                            foreach(AABB bound in orderToIndex[depth])
+                            {
+                                // Check if the object overlaps and add it if it does
+                                if (bound.OverlapTest(body.shape))
+                                    statics[bound].Add(body);
+                            }
+                        }
                     }
                 }
             }
@@ -140,52 +140,52 @@ namespace Capstone
 
             // TODO Once a better AddBody() system is in place this can change to a faster format
             // Instead of having to check the smallest bounds, it should be able to backout if the body is too big, and opt for assuming it wants to know about the smaller bounds list of bodies.
-            if (BoundsTest(body))
-            {
-                if (bounds[(int)QUAD.One].OverlapTest(body.shape))
-                {
-                    for (short i = 1; i < 5; ++i)
-                    {
-                        if (bounds[(int)QUAD.One + i].OverlapTest(body.shape))
-                        {
-                            bodies.AddRange(statics[bounds[(int)QUAD.One + i]]);
-                        }
-                    }
-                }
+            //if (BoundsTest(body))
+            //{
+            //    if (bounds[(int)QUAD.One].OverlapTest(body.shape))
+            //    {
+            //        for (short i = 1; i < 5; ++i)
+            //        {
+            //            if (bounds[(int)QUAD.One + i].OverlapTest(body.shape))
+            //            {
+            //                bodies.AddRange(statics[bounds[(int)QUAD.One + i]]);
+            //            }
+            //        }
+            //    }
 
-                if (bounds[(int)QUAD.Two].OverlapTest(body.shape))
-                {
-                    for (short i = 1; i < 5; ++i)
-                    {
-                        if (bounds[(int)QUAD.Two + i].OverlapTest(body.shape))
-                        {
-                            bodies.AddRange(statics[bounds[(int)QUAD.Two + i]]);
-                        }
-                    }
-                }
+            //    if (bounds[(int)QUAD.Two].OverlapTest(body.shape))
+            //    {
+            //        for (short i = 1; i < 5; ++i)
+            //        {
+            //            if (bounds[(int)QUAD.Two + i].OverlapTest(body.shape))
+            //            {
+            //                bodies.AddRange(statics[bounds[(int)QUAD.Two + i]]);
+            //            }
+            //        }
+            //    }
 
-                if (bounds[(int)QUAD.Three].OverlapTest(body.shape))
-                {
-                    for (short i = 1; i < 5; ++i)
-                    {
-                        if (bounds[(int)QUAD.Three + i].OverlapTest(body.shape))
-                        {
-                            bodies.AddRange(statics[bounds[(int)QUAD.Three + i]]);
-                        }
-                    }
-                }
+            //    if (bounds[(int)QUAD.Three].OverlapTest(body.shape))
+            //    {
+            //        for (short i = 1; i < 5; ++i)
+            //        {
+            //            if (bounds[(int)QUAD.Three + i].OverlapTest(body.shape))
+            //            {
+            //                bodies.AddRange(statics[bounds[(int)QUAD.Three + i]]);
+            //            }
+            //        }
+            //    }
 
-                if (bounds[(int)QUAD.Four].OverlapTest(body.shape))
-                {
-                    for (short i = 1; i < 5; ++i)
-                    {
-                        if (bounds[(int)QUAD.Four + i].OverlapTest(body.shape))
-                        {
-                            bodies.AddRange(statics[bounds[(int)QUAD.Four + i]]);
-                        }
-                    }
-                }
-            }
+            //    if (bounds[(int)QUAD.Four].OverlapTest(body.shape))
+            //    {
+            //        for (short i = 1; i < 5; ++i)
+            //        {
+            //            if (bounds[(int)QUAD.Four + i].OverlapTest(body.shape))
+            //            {
+            //                bodies.AddRange(statics[bounds[(int)QUAD.Four + i]]);
+            //            }
+            //        }
+            //    }
+            //}
 
             return bodies;
         }

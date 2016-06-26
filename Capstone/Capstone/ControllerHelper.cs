@@ -1,8 +1,5 @@
-﻿using System;
+﻿using MonoEngine;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Capstone
 {
@@ -30,7 +27,7 @@ namespace Capstone
 
         public Controller GetPlayer(int index)
         {
-            return playerControllers.ElementAt(index);
+            return playerControllers[index];
         }
         public List<Controller> GetPlayers()
         {
@@ -38,7 +35,7 @@ namespace Capstone
         }
         public Controller GetAI(int index)
         {
-            return AIcontrollers.ElementAt(index);
+            return AIcontrollers[index];
         }
         public List<Controller> GetAIs()
         {

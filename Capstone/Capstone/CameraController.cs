@@ -4,7 +4,7 @@ namespace Capstone
 {
     class CameraController : Controller
     {
-        public CameraController(GameObject parent) : base(parent)
+        public CameraController(string name) : base(name)
         {
         }
 

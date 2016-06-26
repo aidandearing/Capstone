@@ -5,7 +5,8 @@ using MonoEngine;
 using MonoEngine.Audio;
 using MonoEngine.Game;
 using MonoEngine.Render;
-using MonoEngine.Physics;
+using MonoEngine.Physics2D;
+using MonoEngine.Physics3D;
 using MonoEngine.Shapes;
 
 namespace Capstone
@@ -55,7 +56,8 @@ namespace Capstone
             // Fullscreen functionality
             //graphics.ToggleFullScreen();
 
-            this.Components.Add(PhysicsEngine.Instance(this));
+            this.Components.Add(PhysicsEngine2D.Instance(this));
+            this.Components.Add(PhysicsEngine3D.Instance(this));
             this.Components.Add(GameObjectManager.Instance(this));
             this.Components.Add(SoundManager.Instance(this));
             this.Components.Add(SongManager.Instance(this));
@@ -83,12 +85,12 @@ namespace Capstone
 
             obj = new GameObject("wall");
             obj.transform.Translate(new Vector3(0, 0, 0));
-            obj.AddComponent(ModelRenderer.MakeGameModel(obj, "BasicSingleWindow"));
-            obj.AddComponent(ModelRenderer.MakeGameModel(obj, "FloorTile"));
-            obj.AddComponent(new Camera(obj));
-            obj.AddComponent(new PhysicsBody(obj, new AABB(obj.transform, 1, 1), PhysicsBody.BodyType.physics_static));
+            obj.AddComponent(ModelRenderer.MakeModelRenderer(obj, "BasicSingleWindow"));
+            obj.AddComponent(ModelRenderer.MakeModelRenderer(obj, "FloorTile"));
+            obj.AddComponent(new Camera("camera"));
+            obj.AddComponent(new PhysicsBody2D("body", new AABB(obj.transform, 1, 1), PhysicsBody2D.BodyType.physics_static));
 
-            PhysicsEngine.CalculateBoundsIndices(obj.GetComponent<PhysicsBody>() as PhysicsBody);
+            PhysicsEngine2D.CalculateBoundsIndices(obj.GetComponent<PhysicsBody2D>() as PhysicsBody2D);
         }
 
         /// <summary>
@@ -108,9 +110,6 @@ namespace Capstone
         {
             if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed || Keyboard.GetState().IsKeyDown(Keys.Escape))
                 Exit();
-            
-            //sm.FadeOutSong();
-            //sm.FadeInSong();
 
             base.Update(gameTime);
         }

@@ -64,11 +64,6 @@
     <Compile Include="GuardController.cs" />
     <Compile Include="LootableController.cs" />
     <Compile Include="NPCController.cs" />
-    <Compile Include="Properties\Physics.Designer.cs">
-      <AutoGen>True</AutoGen>
-      <DesignTimeSharedInput>True</DesignTimeSharedInput>
-      <DependentUpon>Physics.settings</DependentUpon>
-    </Compile>
     <Compile Include="PlayerController.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -125,10 +120,6 @@
     <None Include="Content\Assets\Models\FrontBasicWallCorner.FBX" />
     <None Include="Content\Assets\Models\FrontBasicWallCornerShort.FBX" />
     <None Include="Content\Assets\Models\ShortWall.FBX" />
-    <None Include="Properties\Physics.settings">
-      <Generator>SettingsSingleFileGenerator</Generator>
-      <LastGenOutput>Physics.Designer.cs</LastGenOutput>
-    </None>
     <None Include="Properties\Settings.settings">
       <Generator>SettingsSingleFileGenerator</Generator>
       <LastGenOutput>Settings.Designer.cs</LastGenOutput>

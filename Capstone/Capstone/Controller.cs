@@ -2,14 +2,10 @@
 
 namespace Capstone
 {
-    abstract class Controller : GameObjectComponent, IGameObjectUpdatable
+    abstract class Controller : GameObject
     {
-        public Controller(GameObject parent) : base(parent)
+        public Controller(string name) : base(name)
         {
         }
-
-        public abstract void Update();
-
-
     }
 }

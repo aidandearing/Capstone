@@ -4,7 +4,7 @@ namespace Capstone
 {
     class PlayerController : Controller
     {
-        public PlayerController(GameObject parent) : base(parent)
+        public PlayerController(string name) : base(name)
         {
         }
 

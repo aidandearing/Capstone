@@ -4,7 +4,7 @@ namespace Capstone
 {
     class StorageController : Controller
     {
-        public StorageController(GameObject parent) : base(parent)
+        public StorageController(string name) : base(name)
         {
         }
 

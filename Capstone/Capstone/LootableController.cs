@@ -4,7 +4,7 @@ namespace Capstone
 {
     class LootableController : Controller
     {
-        public LootableController(GameObject parent) : base(parent)
+        public LootableController(string name) : base(name)
         {
         }
 

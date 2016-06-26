@@ -4,7 +4,7 @@ namespace Capstone
 {
     class TripwireController : Controller
     {
-        public TripwireController(GameObject parent) : base(parent)
+        public TripwireController(string name) : base(name)
         {
         }
 

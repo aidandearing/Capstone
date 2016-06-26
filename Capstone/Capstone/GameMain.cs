@@ -2,6 +2,11 @@
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 using MonoEngine;
+using MonoEngine.Audio;
+using MonoEngine.Game;
+using MonoEngine.Render;
+using MonoEngine.Physics;
+using MonoEngine.Shapes;
 
 namespace Capstone
 {
@@ -15,7 +20,6 @@ namespace Capstone
 
         // Temporary
         GameObject obj;
-        SoundManager sm;
 
         public GameMain()
         {
@@ -51,7 +55,10 @@ namespace Capstone
             // Fullscreen functionality
             //graphics.ToggleFullScreen();
 
-            this.Components.Add(Physics.Instance(this));
+            this.Components.Add(PhysicsEngine.Instance(this));
+            this.Components.Add(GameObjectManager.Instance(this));
+            this.Components.Add(SoundManager.Instance(this));
+            this.Components.Add(SongManager.Instance(this));
         }
 
         /// <summary>
@@ -76,12 +83,12 @@ namespace Capstone
 
             obj = new GameObject("wall");
             obj.transform.Translate(new Vector3(0, 0, 0));
-            obj.AddComponent(GameModel.MakeGameModel(obj, "BasicSingleWindow"));
-            obj.AddComponent(GameModel.MakeGameModel(obj, "FloorTile"));
+            obj.AddComponent(ModelRenderer.MakeGameModel(obj, "BasicSingleWindow"));
+            obj.AddComponent(ModelRenderer.MakeGameModel(obj, "FloorTile"));
             obj.AddComponent(new Camera(obj));
             obj.AddComponent(new PhysicsBody(obj, new AABB(obj.transform, 1, 1), PhysicsBody.BodyType.physics_static));
 
-            Physics.CalculateBoundsIndices(obj.GetComponent<PhysicsBody>() as PhysicsBody);
+            PhysicsEngine.CalculateBoundsIndices(obj.GetComponent<PhysicsBody>() as PhysicsBody);
         }
 
         /// <summary>

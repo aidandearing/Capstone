@@ -5,8 +5,8 @@ using MonoEngine;
 using MonoEngine.Audio;
 using MonoEngine.Game;
 using MonoEngine.Render;
-using MonoEngine.Physics2D;
-using MonoEngine.Physics3D;
+using MonoEngine.Physics;
+using MonoEngine.Physics.Physics2D;
 using MonoEngine.Shapes;
 
 namespace Capstone
@@ -56,8 +56,7 @@ namespace Capstone
             // Fullscreen functionality
             //graphics.ToggleFullScreen();
 
-            this.Components.Add(PhysicsEngine2D.Instance(this));
-            this.Components.Add(PhysicsEngine3D.Instance(this));
+            this.Components.Add(PhysicsEngine.Instance(this, PhysicsEngine.EngineTypes.Physics2D));
             this.Components.Add(GameObjectManager.Instance(this));
             this.Components.Add(SoundManager.Instance(this));
             this.Components.Add(SongManager.Instance(this));
@@ -90,7 +89,7 @@ namespace Capstone
             obj.AddComponent(new Camera("camera"));
             obj.AddComponent(new PhysicsBody2D("body", new AABB(obj.transform, 1, 1), PhysicsBody2D.BodyType.physics_static));
 
-            PhysicsEngine2D.CalculateBoundsIndices(obj.GetComponent<PhysicsBody2D>() as PhysicsBody2D);
+            //PhysicsEngine2D.CalculateBoundsIndices(obj.GetComponent<PhysicsBody2D>() as PhysicsBody2D);
         }
 
         /// <summary>

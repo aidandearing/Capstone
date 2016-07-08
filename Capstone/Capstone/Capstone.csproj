@@ -60,6 +60,9 @@
     <Compile Include="CameraController.cs" />
     <Compile Include="Controller.cs" />
     <Compile Include="ControllerHelper.cs" />
+    <Compile Include="FoodModifier.cs" />
+    <Compile Include="Food.cs" />
+    <Compile Include="FoodState.cs" />
     <Compile Include="GameMain.cs" />
     <Compile Include="GuardController.cs" />
     <Compile Include="LootableController.cs" />

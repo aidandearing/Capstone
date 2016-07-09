@@ -82,12 +82,13 @@ namespace Capstone
             // Create a new SpriteBatch, which can be used to draw textures.
             spriteBatch = new SpriteBatch(GraphicsDevice);
 
+            Transform trans = new Transform();
             obj = new GameObject("wall");
             obj.transform.Translate(new Vector3(0, 0, 0));
             obj.AddComponent(ModelRenderer.MakeModelRenderer(obj, "BasicSingleWindow"));
             obj.AddComponent(ModelRenderer.MakeModelRenderer(obj, "FloorTile"));
+            obj.AddComponent(new PhysicsBody2D("body", new AABB(obj.transform, 1, 1), PhysicsEngine.BodyType.STATIC));
             obj.AddComponent(new Camera("camera"));
-            obj.AddComponent(new PhysicsBody2D("body", new AABB(obj.transform, 1, 1), PhysicsBody2D.BodyType.physics_static));
 
             //PhysicsEngine2D.CalculateBoundsIndices(obj.GetComponent<PhysicsBody2D>() as PhysicsBody2D);
         }
@@ -110,6 +111,8 @@ namespace Capstone
             if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed || Keyboard.GetState().IsKeyDown(Keys.Escape))
                 Exit();
 
+            System.Console.WriteLine(obj.transform.Position);
+
             base.Update(gameTime);
         }
 
@@ -122,9 +125,6 @@ namespace Capstone
             GraphicsDevice.Clear(Color.Aquamarine);
             
             obj.Render();
-            obj.transform.Translate(new Vector3(1, 0, 0));
-            obj.Render();
-            obj.transform.Translate(new Vector3(-1, 0, 0));
 
             base.Draw(gameTime);
         }

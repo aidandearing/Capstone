@@ -56,6 +56,7 @@ namespace Capstone
             // Fullscreen functionality
             //graphics.ToggleFullScreen();
 
+            this.Components.Add(Time.Instance(this));
             this.Components.Add(PhysicsEngine.Instance(this, PhysicsEngine.EngineTypes.Physics2D));
             this.Components.Add(GameObjectManager.Instance(this));
             this.Components.Add(SoundManager.Instance(this));

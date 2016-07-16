@@ -19,9 +19,6 @@ namespace Capstone
         GraphicsDeviceManager graphics;
         SpriteBatch spriteBatch;
 
-        // Temporary
-        GameObject obj;
-
         public GameMain()
         {
             graphics = new GraphicsDeviceManager(this);
@@ -57,10 +54,10 @@ namespace Capstone
             //graphics.ToggleFullScreen();
 
             this.Components.Add(Time.Instance(this));
-            this.Components.Add(PhysicsEngine.Instance(this, PhysicsEngine.EngineTypes.Physics2D));
             this.Components.Add(GameObjectManager.Instance(this));
             this.Components.Add(SoundManager.Instance(this));
             this.Components.Add(SongManager.Instance(this));
+            this.Components.Add(PhysicsEngine.Instance(this, PhysicsEngine.EngineTypes.Physics2D));
         }
 
         /// <summary>
@@ -82,16 +79,6 @@ namespace Capstone
         {
             // Create a new SpriteBatch, which can be used to draw textures.
             spriteBatch = new SpriteBatch(GraphicsDevice);
-
-            Transform trans = new Transform();
-            obj = new GameObject("wall");
-            obj.transform.Translate(new Vector3(0, 0, 0));
-            obj.AddComponent(ModelRenderer.MakeModelRenderer(obj, "BasicSingleWindow"));
-            obj.AddComponent(ModelRenderer.MakeModelRenderer(obj, "FloorTile"));
-            obj.AddComponent(new PhysicsBody2D("body", new AABB(obj.transform, 1, 1), PhysicsEngine.BodyType.STATIC));
-            obj.AddComponent(new Camera("camera"));
-
-            //PhysicsEngine2D.CalculateBoundsIndices(obj.GetComponent<PhysicsBody2D>() as PhysicsBody2D);
         }
 
         /// <summary>
@@ -112,8 +99,6 @@ namespace Capstone
             if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed || Keyboard.GetState().IsKeyDown(Keys.Escape))
                 Exit();
 
-            System.Console.WriteLine(obj.transform.Position);
-
             base.Update(gameTime);
         }
 
@@ -124,8 +109,6 @@ namespace Capstone
         protected override void Draw(GameTime gameTime)
         {
             GraphicsDevice.Clear(Color.Aquamarine);
-            
-            obj.Render();
 
             base.Draw(gameTime);
         }
